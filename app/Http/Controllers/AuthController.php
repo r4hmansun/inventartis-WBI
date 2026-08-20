@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class AuthController extends Controller
 {
@@ -29,8 +30,17 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        $remember = $request->boolean('remember');
+
+        if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
+
+            // Simpan cookie email selama 30 hari jika Ingat Saya dicentang, atau hapus jika tidak dicentang
+            if ($remember) {
+                Cookie::queue('remember_email', $request->email, 60 * 24 * 30);
+            } else {
+                Cookie::queue(Cookie::forget('remember_email'));
+            }
 
             return redirect()->intended(route('dashboard'));
         }
