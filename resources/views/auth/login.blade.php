@@ -6,13 +6,11 @@
 <div class="bg-surface-white rounded-lg border border-border-light p-8" style="box-shadow: var(--shadow-soft);">
     {{-- Logo --}}
     <div class="text-center mb-8">
-        <div class="w-16 h-16 mx-auto rounded-2xl bg-primary flex items-center justify-center mb-4">
-            <svg class="w-9 h-9 text-on-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-            </svg>
+        <div class="inline-flex items-center justify-center mb-3">
+            <img src="{{ asset('images/logo.png') }}" alt="Wilmar Business Indonesia Polytechnic" class="h-16 w-auto max-w-full object-contain">
         </div>
         <h1 class="font-display text-2xl font-bold text-on-surface">WBI Inventaris</h1>
-        <p class="text-sm text-on-surface-variant mt-1">Sistem Manajemen Inventaris & Mutasi Aset</p>
+        <p class="text-sm text-on-surface-variant mt-1">Sistem Manajemen Inventaris &amp; Mutasi Aset</p>
     </div>
 
     {{-- Error messages --}}

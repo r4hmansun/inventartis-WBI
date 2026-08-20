@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="Sistem Manajemen Inventaris & Mutasi Aset Terpadu — WBI">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
     <title>@yield('title', 'Dashboard') — WBI Inventaris</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -17,17 +18,21 @@
         <div class="flex-1 flex flex-col min-h-screen lg:ml-[260px]">
             {{-- Top Bar --}}
             <header class="sticky top-0 z-30 bg-surface-white border-b border-border-light px-6 py-3 flex items-center justify-between" style="box-shadow: var(--shadow-soft);">
-                {{-- Mobile menu toggle --}}
-                <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-md hover:bg-surface-container transition-colors" aria-label="Toggle navigation">
-                    <svg class="w-6 h-6 text-on-surface" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
-                </button>
+                <div class="flex items-center gap-3">
+                    {{-- Mobile menu toggle --}}
+                    <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-md hover:bg-surface-container transition-colors" aria-label="Toggle navigation">
+                        <svg class="w-6 h-6 text-on-surface" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
 
-                {{-- Page title --}}
-                <h1 class="font-display text-xl font-semibold text-on-surface hidden sm:block">
-                    @yield('page-title', 'Dashboard')
-                </h1>
+                    <img src="{{ asset('images/logo.png') }}" alt="WBI Logo" class="h-6 w-auto object-contain lg:hidden">
+
+                    {{-- Page title --}}
+                    <h1 class="font-display text-xl font-semibold text-on-surface hidden sm:block">
+                        @yield('page-title', 'Dashboard')
+                    </h1>
+                </div>
 
                 {{-- User dropdown --}}
                 <div class="flex items-center gap-3">
