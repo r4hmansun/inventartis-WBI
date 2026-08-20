@@ -1,0 +1,181 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+/* ============================================================
+   WBI Asset Management — Design System (DESIGN.md)
+   ============================================================ */
+
+@theme {
+    /* ── Primary (Deep Teal) ── */
+    --color-primary: #002a22;
+    --color-primary-light: #134137;
+    --color-primary-hover: #224e44;
+    --color-primary-surface: #bdecde;
+    --color-primary-muted: #a2d0c2;
+    --color-on-primary: #ffffff;
+    --color-on-primary-container: #80ada0;
+
+    /* ── Secondary (Earthy Gold) ── */
+    --color-secondary: #805600;
+    --color-secondary-light: #ffc569;
+    --color-secondary-hover: #614000;
+    --color-on-secondary: #ffffff;
+    --color-on-secondary-container: #775000;
+
+    /* ── Tertiary (Olive Drab) ── */
+    --color-tertiary: #21260f;
+    --color-tertiary-light: #373c22;
+    --color-on-tertiary-container: #a1a785;
+
+    /* ── Slate Gray ── */
+    --color-slate-gray: #537E83;
+
+    /* ── Semantic Colors ── */
+    --color-success: #2D6A4F;
+    --color-warning: #D97706;
+    --color-danger: #991B1B;
+    --color-error: #ba1a1a;
+
+    /* ── Surface / Backgrounds ── */
+    --color-surface: #f9f9f7;
+    --color-surface-dim: #d9dad8;
+    --color-surface-container: #edeeec;
+    --color-surface-container-high: #e8e8e6;
+    --color-surface-white: #ffffff;
+    --color-neutral-bg: #F8F9FA;
+    --color-on-surface: #1a1c1b;
+    --color-on-surface-variant: #404846;
+
+    /* ── Outline / Border ── */
+    --color-outline: #717975;
+    --color-outline-variant: #c0c8c4;
+    --color-border-light: #E5E7EB;
+
+    /* ── Typography ── */
+    --font-display: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+    /* ── Spacing ── */
+    --spacing-section: 48px;
+    --spacing-gutter: 24px;
+    --spacing-form: 16px;
+    --spacing-container: 32px;
+
+    /* ── Shadows (tinted Deep Teal) ── */
+    --shadow-soft: 0 2px 8px rgba(0, 42, 34, 0.04);
+    --shadow-focus: 0 0 0 3px rgba(0, 42, 34, 0.15);
+
+    /* ── Radius ── */
+    --radius-sm: 0.125rem;
+    --radius-DEFAULT: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+    --radius-full: 9999px;
+}
+
+/* ── Row Hover (Table) ── */
+.table-row-hover:hover {
+    background-color: #F0F4F3;
+}
+
+/* ── Status Top-Border ── */
+.status-bar-active { border-top: 3px solid var(--color-success); }
+.status-bar-warning { border-top: 3px solid var(--color-warning); }
+.status-bar-danger { border-top: 3px solid var(--color-danger); }
+.status-bar-slate { border-top: 3px solid var(--color-slate-gray); }
+
+/* ============================================================
+   SweetAlert2 Custom Styling (Corporate Theme)
+   ============================================================ */
+
+.wbi-swal-popup {
+    border-radius: 0.5rem !important;
+    padding: 1.75rem !important;
+    background-color: #ffffff !important;
+    border: 1px solid #E5E7EB !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 42, 34, 0.1), 0 8px 10px -6px rgba(0, 42, 34, 0.1) !important;
+    font-family: var(--font-body) !important;
+}
+
+.wbi-swal-title {
+    font-family: var(--font-display) !important;
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    color: #1a1c1b !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.wbi-swal-text {
+    font-family: var(--font-body) !important;
+    font-size: 0.875rem !important;
+    color: #404846 !important;
+    line-height: 1.5 !important;
+}
+
+.wbi-swal-btn {
+    font-family: var(--font-body) !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    padding: 0.625rem 1.25rem !important;
+    border-radius: 0.375rem !important;
+    margin: 0.25rem 0.375rem !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+}
+
+.wbi-swal-btn:active {
+    transform: scale(0.98);
+}
+
+.wbi-swal-btn-primary {
+    background-color: var(--color-primary) !important;
+    color: #ffffff !important;
+    border: 1px solid transparent !important;
+}
+
+.wbi-swal-btn-primary:hover {
+    background-color: var(--color-primary-light) !important;
+}
+
+.wbi-swal-btn-cancel {
+    background-color: #ffffff !important;
+    color: #404846 !important;
+    border: 1px solid #c0c8c4 !important;
+}
+
+.wbi-swal-btn-cancel:hover {
+    background-color: #f3f4f2 !important;
+    color: #1a1c1b !important;
+}
+
+.wbi-swal-btn-danger {
+    background-color: var(--color-danger) !important;
+    color: #ffffff !important;
+    border: 1px solid transparent !important;
+}
+
+.wbi-swal-btn-danger:hover {
+    background-color: #7F1D1D !important;
+}
+
+.wbi-toast-popup {
+    border-radius: 0.5rem !important;
+    border: 1px solid #E5E7EB !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(0, 42, 34, 0.08) !important;
+    padding: 0.75rem 1rem !important;
+}
+
+.wbi-toast-title {
+    font-family: var(--font-body) !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: #1a1c1b !important;
+}
