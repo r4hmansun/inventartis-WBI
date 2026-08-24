@@ -9,3 +9,7 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+
+# Ignore AI agents skills tooling from GitHub language statistics
+.agents/** linguist-vendored
+.agents/** linguist-documentation
