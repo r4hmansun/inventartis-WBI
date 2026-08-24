@@ -4,6 +4,7 @@ use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\MutationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,13 +33,25 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Assets — accessible by finance, inventory, admin
-    Route::middleware('role:finance,inventory,admin')->group(function () {
-        Route::get('/assets', [AssetController::class, 'index'])->name('assets.index');
+    // Asset Registration — only finance & admin (must be before /assets/{asset})
+    Route::middleware('role:finance,admin')->group(function () {
         Route::get('/assets/create', [AssetController::class, 'create'])->name('assets.create');
         Route::post('/assets', [AssetController::class, 'store'])->name('assets.store');
-        Route::get('/assets/{asset}', [AssetController::class, 'show'])->name('assets.show');
     });
+
+    // Assets — Viewable by all authenticated users (User, Finance, Inventory, Admin)
+    Route::get('/assets', [AssetController::class, 'index'])->name('assets.index');
+    Route::get('/assets/{asset}', [AssetController::class, 'show'])->name('assets.show');
+
+    // Mutations — Lifecycle of asset transfers (Flow 2)
+    Route::get('/mutations', [MutationController::class, 'index'])->name('mutations.index');
+    Route::get('/mutations/create', [MutationController::class, 'create'])->name('mutations.create');
+    Route::post('/mutations', [MutationController::class, 'store'])->name('mutations.store');
+    Route::get('/mutations/{mutation}', [MutationController::class, 'show'])->name('mutations.show');
+    Route::post('/mutations/{mutation}/approve-receiver', [MutationController::class, 'approveReceiver'])->name('mutations.approve-receiver');
+    Route::post('/mutations/{mutation}/reject', [MutationController::class, 'reject'])->name('mutations.reject');
+    Route::post('/mutations/{mutation}/execute', [MutationController::class, 'execute'])->name('mutations.execute');
+    Route::get('/mutations/{mutation}/print', [MutationController::class, 'print'])->name('mutations.print');
 
     // Admin-only routes: Master Data
     Route::middleware('role:admin')->group(function () {

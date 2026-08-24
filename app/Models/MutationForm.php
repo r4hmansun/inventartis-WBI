@@ -13,6 +13,7 @@ class MutationForm extends Model
         'from_department_id',
         'to_department_id',
         'reason',
+        'rejection_reason',
         'status',
         'sender_user_id',
         'receiver_user_id',
@@ -81,11 +82,14 @@ class MutationForm extends Model
     }
 
     /**
-     * Check if form has dual-approval (BR-04).
+     * Check if form has dual-approval (BR-04) via Digital Approval Button.
      */
     public function hasDualApproval(): bool
     {
-        return $this->sender_signature !== null && $this->receiver_signature !== null;
+        $hasSenderApproval = $this->sender_signed_at !== null || $this->sender_signature !== null;
+        $hasReceiverApproval = $this->receiver_signed_at !== null || $this->receiver_signature !== null;
+
+        return $hasSenderApproval && $hasReceiverApproval;
     }
 
     /**

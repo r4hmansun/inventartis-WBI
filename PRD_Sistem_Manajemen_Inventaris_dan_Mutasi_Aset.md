@@ -5,11 +5,11 @@
 
 ### 1. Informasi Dokumen & Ringkasan Eksekutif
 * **Nama Dokumen:** Product Requirement Document (PRD) – Sistem Manajemen Inventaris & Mutasi Aset
-* **Versi Dokumen:** v1.0.0 (Final Draft)
+* **Versi Dokumen:** v1.1.0 (Approval System Update)
 * **Status:** Siap untuk Tahap Pengembangan (*Ready for Development*)
 * **Target Rilis:** Sprint 1 - 3
 * **Kategori Sistem:** Enterprise Asset Management
-* **Tujuan Utama:** Mendigitalisasi siklus hidup pencatatan aset inventaris, menerapkan validasi batas kapitalisasi aset, memfasilitasi persetujuan mutasi aset antar-departemen berbasis tanda tangan digital, serta menyediakan pengarsipan otomatis untuk kebutuhan audit.
+* **Tujuan Utama:** Mendigitalisasi siklus hidup pencatatan aset inventaris, menerapkan validasi batas kapitalisasi aset, memfasilitasi persetujuan mutasi aset antar-departemen berbasis **Tombol Persetujuan Digital (Digital Approval Button)**, serta menyediakan pengarsipan otomatis untuk kebutuhan audit.
 
 ---
 
@@ -17,9 +17,9 @@
 
 | Peran (Role) | Deskripsi Tanggung Jawab | Hak Akses Utama di Sistem |
 | :--- | :--- | :--- |
-| **User / Departemen Terkait** *(HE, WBIC, PKA, dll.)* | Divisi/bagian operasional yang menggunakan dan mengelola aset secara langsung. | • Mengajukan permohonan kode inventaris baru ke Bagian Keuangan.<br>• Mengonfirmasi & menyetujui penerimaan fisik aset.<br>• Menerbitkan form pengajuan mutasi aset ke departemen lain.<br>• Membubuhkan TTD digital sebagai Penyerah atau Penerima. |
+| **User / Departemen Terkait** *(HE, WBIC, PKA, dll.)* | Divisi/bagian operasional yang menggunakan dan mengelola aset secara langsung. | • Mengajukan permohonan kode inventaris baru ke Bagian Keuangan.<br>• Mengonfirmasi & menyetujui penerimaan fisik aset.<br>• Menerbitkan form pengajuan mutasi aset ke departemen lain.<br>• Menyetujui/menolak mutasi melalui Tombol Approval Digital sebagai Penyerah atau Penerima. |
 | **Bagian Keuangan** | Verifikator anggaran dan pencatat nilai kapitalisasi barang. | • Menerima tiket permohonan kode inventaris.<br>• Memvalidasi kelayakan harga barang (aturan ambang batas Rp 500.000).<br>• Menginput kode aset ke sistem.<br>• Menempatkan status aset awal ke *Gudang Inventaris*. |
-| **Bagian Inventaris** | Pengelola logistik aset, eksekutor perpindahan aset, dan pengelola arsip formulir. | • Memutasi aset dari Gudang Inventaris ke departemen yang bertanggung jawab.<br>• Memvalidasi kelengkapan TTD pada formulir mutasi antar-bagian.<br>• Mengeksekusi mutasi resmi (mengubah penanggung jawab di sistem).<br>• Mengelola dan mengunduh berkas arsip digital formulir mutasi. |
+| **Bagian Inventaris** | Pengelola logistik aset, eksekutor perpindahan aset, dan pengelola arsip formulir. | • Memutasi aset dari Gudang Inventaris ke departemen yang bertanggung jawab.<br>• Memvalidasi kelengkapan Approval pada formulir mutasi antar-bagian.<br>• Mengeksekusi mutasi resmi (mengubah penanggung jawab di sistem).<br>• Mengelola dan mengunduh berkas arsip digital formulir mutasi. |
 | **Super Admin / Auditor** | Administrator teknis dan pengawas kepatuhan aset perusahaan. | • Mengelola master data (departemen, kategori aset, user).<br>• Melihat riwayat audit (*audit log timeline*) seluruh mutasi aset.<br>• Mengunduh rekap laporan inventaris keseluruhan. |
 
 ---
@@ -34,7 +34,7 @@
 * **BR-03: Alur Penyaluran Internal Bagian Inventaris**
   * Apabila aset tersebut dikhususkan untuk operasional Bagian Inventaris sendiri, maka Bagian Inventaris melakukan mutasi dari Gudang Inventaris ke Bagian Inventaris.
 * **BR-04: Syarat Sah Persetujuan Ganda (Dual-Approval Mutasi)**
-  * Formulir mutasi baru dinyatakan valid dan siap dieksekusi apabila telah di approve secara digital oleh pihak **Penyerah** dan pihak **Penerima**.
+  * Formulir mutasi baru dinyatakan valid dan siap dieksekusi apabila telah di-approve secara digital (klik tombol Approval) oleh pihak **Penyerah** dan pihak **Penerima**.
 * **BR-05: Otomatisasi Pengarsipan Formulir (Digital Archiving)**
   * Setiap mutasi yang telah dieksekusi oleh Bagian Inventaris harus langsung terkunci secara permanen dan otomatis diarsipkan ke modul *Arsip Form* sistem.
 
@@ -61,7 +61,7 @@
         *(Jika dikelola Bag. Inventaris: Mutasi dari Gudang Inv. ke Bag. Inventaris)*
                 │
                 ▼
-        [Approval & Konfirmasi Penerimaan oleh Bagian yg Bertanggung Jawab]
+        [Tombol Approval & Konfirmasi Penerimaan oleh Bagian yg Bertanggung Jawab]
                 │
                 ▼
         [SELESAI - Status Aset Aktif Digunakan]
@@ -75,10 +75,10 @@
 [Mengisi Form: Pilih Asset, Tujuan Mutasi, & Alasan]
         │
         ▼
-[Proses Approval & E-Signature: TTD Penyerah & TTD Penerima / AL Penyerahan]
+[Proses Multi-Approval: Tombol Approval Penyerah & Tombol Approval Penerima]
         │
         ▼
-[Setelah Disetujui: Bagian INVENTARIS Memindahkan / Mutasi Asset ke Penerima]
+[Setelah Kedua Pihak Menyetujui: Bagian INVENTARIS Memindahkan / Eksekusi Mutasi Asset]
         │
         ▼
 [Bagian INVENTARIS Mengarsipkan FORM Mutasi (Arsip Form)]
@@ -96,7 +96,7 @@
 | **FR-REG-01** | Validasi Ambang Batas Kapitalisasi | Sistem otomatis menghitung input harga. Jika < Rp 500.000, tombol "Simpan Aset" disable / muncul peringatan. |
 | **FR-REG-02** | Auto-Generate Kode Aset | Sistem membuat kode unik format: `AST/[KODE-DEPT]/[BULAN]/[TAHUN]/[NO-URUT]`. |
 | **FR-MUT-01** | Penerbitan Digital Form Mutasi | Dropdown aset hanya menampilkan barang yang dimiliki departemen penyerah. Tersedia kolom alasan mutasi & kondisi. |
-| **FR-MUT-02** | E-Signature & Multi-Approval | Canvas TTD digital untuk Penyerah & Penerima. Tombol eksekusi Bag. Inventaris aktif jika kedua TTD terisi. |
+| **FR-MUT-02** | 1-Click Digital Approval & Dual-Approval | Tombol persetujuan digital (Approve / Reject) untuk Penyerah & Penerima dengan pencatatan timestamp & user ID otomatis (tanpa perlu gambar tanda tangan canvas). Tombol eksekusi Bag. Inventaris aktif setelah kedua pihak menyetujui. |
 | **FR-MUT-03** | Auto-Archiving & PDF Generation | Setelah eksekusi, sistem membuat file PDF Berita Acara Serah Terima otomatis yang dapat diunduh. |
 | **FR-LOG-01** | Asset Audit Trail & Timeline | Perubahan status, pemegang aset, dan mutasi tercatat dalam log audit yang tidak dapat diubah (immutable). |
 

@@ -35,10 +35,23 @@ class AssetController extends Controller
             });
         }
 
+        $user = $request->user();
+        $userDepartment = $user->department;
+
+        // Support scope tab: my_department
+        if ($request->get('scope') === 'my_dept' && $user->department_id) {
+            $query->where('current_department_id', $user->department_id);
+        }
+
         $assets = $query->latest()->paginate(15)->withQueryString();
         $departments = Department::active()->orderBy('name')->get();
 
-        return view('assets.index', compact('assets', 'departments'));
+        // Department-specific count if user belongs to one
+        $myDeptAssetCount = $user->department_id
+            ? Asset::where('current_department_id', $user->department_id)->count()
+            : 0;
+
+        return view('assets.index', compact('assets', 'departments', 'userDepartment', 'myDeptAssetCount'));
     }
 
     /**

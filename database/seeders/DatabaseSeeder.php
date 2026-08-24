@@ -55,8 +55,10 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Create sample departmental user
+        // Create sample departmental users
         $heDept = Department::where('code', 'HE')->first();
+        $wbicDept = Department::where('code', 'WBIC')->first();
+        $pkaDept = Department::where('code', 'PKA')->first();
 
         User::firstOrCreate(
             ['email' => 'user.he@wbi.co.id'],
@@ -64,6 +66,26 @@ class DatabaseSeeder extends Seeder
                 'name' => 'User HE',
                 'password' => 'password',
                 'department_id' => $heDept?->id,
+                'role' => 'user',
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'user.wbic@wbi.co.id'],
+            [
+                'name' => 'User WBIC',
+                'password' => 'password',
+                'department_id' => $wbicDept?->id,
+                'role' => 'user',
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'user.pka@wbi.co.id'],
+            [
+                'name' => 'User PKA',
+                'password' => 'password',
+                'department_id' => $pkaDept?->id,
                 'role' => 'user',
             ]
         );
