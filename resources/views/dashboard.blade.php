@@ -358,111 +358,190 @@
         ])
     </div>
 
-    {{-- 3. Visual Analytics Section (5 Charts Sesuai DESIGN.md) --}}
+    {{-- 3. Visual Analytics Section --}}
     <div class="space-y-4">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between pb-0.5">
             <div class="flex items-center gap-2">
                 <div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
-                <h3 class="font-display text-base font-bold text-on-surface">Analitik &amp; Visualisasi Inventaris</h3>
-                <span class="text-[11px] font-mono text-on-surface-variant">(5 Grafik Interaktif)</span>
+                <h3 class="font-display text-base font-bold text-on-surface">Analisis &amp; Visualisasi Inventaris</h3>
             </div>
             <span class="text-xs font-mono text-on-surface-variant">Update Realtime</span>
         </div>
 
-        {{-- Baris 1: 2 Grafik Utama (Doughnut Status & Bar Valuasi Departemen) --}}
+        {{-- Baris 1: 2 Grafik Utama (Hub Distribusi & Kelayakan + Valuasi Departemen) --}}
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-            {{-- Grafik 1: Distribusi Status Aset --}}
-            <div class="lg:col-span-5 bg-surface-white rounded-xl border border-border-light p-5 shadow-xs flex flex-col justify-between">
+            {{-- Card 1: Distribusi & Kondisi Aset --}}
+            <div class="lg:col-span-6 bg-surface-white rounded-xl border border-border-light p-5 shadow-xs flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <h4 class="font-display text-sm font-bold text-on-surface">1. Distribusi Status Aset</h4>
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-medium">Status Proporsi</span>
+                    {{-- Header with Segmented Pill Tabs & Chart Type Toggle --}}
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                        <div>
+                            <h4 id="assetDistTitle" class="font-display text-sm font-bold text-on-surface">Distribusi Status Aset</h4>
+                            <p id="assetDistDesc" class="text-xs text-on-surface-variant mt-0.5">Sebaran status operasional, gudang inventaris, dan perbaikan.</p>
+                        </div>
+
+                        {{-- Controls: Segmented Tabs & Type Switcher --}}
+                        <div class="flex items-center gap-1.5 shrink-0 self-start sm:self-auto">
+                            <div class="inline-flex items-center p-0.5 rounded-lg bg-surface-container text-xs">
+                                <button type="button" id="tabAssetStatus" onclick="switchAssetDistView('status')"
+                                        class="px-2.5 py-1 rounded-md text-xs font-semibold bg-surface-white text-primary shadow-2xs transition-all">
+                                    Status Aset
+                                </button>
+                                <button type="button" id="tabAssetCondition" onclick="switchAssetDistView('condition')"
+                                        class="px-2.5 py-1 rounded-md text-xs font-medium text-on-surface-variant hover:text-on-surface transition-all">
+                                    Kondisi Fisik
+                                </button>
+                            </div>
+
+                            <div class="inline-flex items-center p-0.5 rounded-lg bg-surface-container">
+                                <button type="button" id="btnAssetDistDonut" onclick="toggleAssetDistType('doughnut')"
+                                        class="p-1 rounded-md bg-surface-white text-primary shadow-2xs transition-all"
+                                        title="Tampilan Donut">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
+                                    </svg>
+                                </button>
+                                <button type="button" id="btnAssetDistBar" onclick="toggleAssetDistType('bar')"
+                                        class="p-1 rounded-md text-on-surface-variant hover:text-on-surface transition-all"
+                                        title="Tampilan Batang">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-xs text-on-surface-variant mb-4">Sebaran status operasional, gudang penampungan, dan perbaikan.</p>
-                    <div class="relative h-56 flex items-center justify-center">
-                        <canvas id="chartAssetStatus"></canvas>
+
+                    {{-- Chart Canvas Container --}}
+                    <div class="relative h-56 flex items-center justify-center my-2">
+                        <canvas id="chartAssetDist"></canvas>
                     </div>
                 </div>
-                <div class="pt-3 mt-2 border-t border-border-light grid grid-cols-2 gap-2 text-[11px] font-mono text-on-surface-variant">
-                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-700"></span> Aktif: {{ $stats['active_assets'] }} Unit</div>
-                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span> Gudang: {{ $stats['in_storage'] }} Unit</div>
-                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-600"></span> Perbaikan: {{ $stats['under_repair'] }} Unit</div>
-                    <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-700"></span> Dihapus: {{ $stats['disposed'] }} Unit</div>
+
+                {{-- Clean Dynamic Status / Condition Legend Chips (No Duplication) --}}
+                <div>
+                    {{-- Status Legend --}}
+                    <div id="assetDistStatusFooter" class="pt-3 mt-2 border-t border-border-light grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-surface-container/40">
+                            <span class="flex items-center gap-1.5 text-on-surface-variant text-[11px]"><span class="w-2 h-2 rounded-full bg-[#2D6A4F] shrink-0"></span> Aktif</span>
+                            <span class="font-bold text-on-surface">{{ $stats['active_assets'] }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-surface-container/40">
+                            <span class="flex items-center gap-1.5 text-on-surface-variant text-[11px]"><span class="w-2 h-2 rounded-full bg-[#537E83] shrink-0"></span> Gudang</span>
+                            <span class="font-bold text-on-surface">{{ $stats['in_storage'] }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-surface-container/40">
+                            <span class="flex items-center gap-1.5 text-on-surface-variant text-[11px]"><span class="w-2 h-2 rounded-full bg-[#D97706] shrink-0"></span> Perbaikan</span>
+                            <span class="font-bold text-on-surface">{{ $stats['under_repair'] }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-surface-container/40">
+                            <span class="flex items-center gap-1.5 text-on-surface-variant text-[11px]"><span class="w-2 h-2 rounded-full bg-[#991B1B] shrink-0"></span> Dihapus</span>
+                            <span class="font-bold text-on-surface">{{ $stats['disposed'] }}</span>
+                        </div>
+                    </div>
+
+                    {{-- Condition Legend --}}
+                    <div id="assetDistConditionFooter" class="pt-3 mt-2 border-t border-border-light grid grid-cols-3 gap-2 text-xs font-mono hidden">
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-surface-container/40">
+                            <span class="flex items-center gap-1.5 text-on-surface-variant text-[11px]"><span class="w-2 h-2 rounded-full bg-[#2D6A4F] shrink-0"></span> Kondisi Baik</span>
+                            <span class="font-bold text-emerald-700">{{ $chartConditions['data'][0] }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-surface-container/40">
+                            <span class="flex items-center gap-1.5 text-on-surface-variant text-[11px]"><span class="w-2 h-2 rounded-full bg-[#D97706] shrink-0"></span> Rusak Ringan</span>
+                            <span class="font-bold text-amber-700">{{ $chartConditions['data'][1] }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-surface-container/40">
+                            <span class="flex items-center gap-1.5 text-on-surface-variant text-[11px]"><span class="w-2 h-2 rounded-full bg-[#991B1B] shrink-0"></span> Rusak Berat</span>
+                            <span class="font-bold text-rose-700">{{ $chartConditions['data'][2] }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {{-- Grafik 2: Valuasi Nilai Aset per Departemen --}}
-            <div class="lg:col-span-7 bg-surface-white rounded-xl border border-border-light p-5 shadow-xs flex flex-col justify-between">
+            {{-- Card 2: Valuasi Nilai Aset per Unit Kerja --}}
+            <div class="lg:col-span-6 bg-surface-white rounded-xl border border-border-light p-5 shadow-xs flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <h4 class="font-display text-sm font-bold text-on-surface">2. Valuasi Nilai Kapitalisasi Aset per Unit</h4>
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container text-primary font-bold">Rupiah (IDR)</span>
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <div>
+                            <h4 class="font-display text-sm font-bold text-on-surface">Valuasi Aset per Unit Kerja</h4>
+                            <p class="text-xs text-on-surface-variant mt-0.5">Akumulasi harga perolehan barang (&ge; Rp 500.000) per unit.</p>
+                        </div>
+                        <span class="text-[11px] font-mono px-2.5 py-1 rounded-md bg-surface-container text-primary font-bold whitespace-nowrap">
+                            Rupiah (IDR)
+                        </span>
                     </div>
-                    <p class="text-xs text-on-surface-variant mb-4">Akumulasi nilai buku barang (&ge; Rp 500.000) di unit kerja pemegang aset.</p>
-                    <div class="relative h-56">
+
+                    <div class="relative h-56 my-2">
                         <canvas id="chartDeptValuations"></canvas>
                     </div>
                 </div>
-                <div class="pt-3 mt-2 border-t border-border-light flex items-center justify-between text-[11px] text-on-surface-variant font-mono">
+                <div class="pt-3 mt-2 border-t border-border-light flex items-center justify-between text-xs text-on-surface-variant font-mono">
                     <span>Total Valuasi Terdata:</span>
-                    <strong class="text-on-surface font-bold">Rp {{ number_format($stats['total_valuation'], 0, ',', '.') }}</strong>
+                    <strong class="text-on-surface font-bold text-sm">Rp {{ number_format($stats['total_valuation'], 0, ',', '.') }}</strong>
                 </div>
             </div>
         </div>
 
-        {{-- Baris 2: 3 Grafik Pendukung (Tren Mutasi, Kondisi Fisik, Top Penerima) --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {{-- Grafik 3: Tren Mutasi Aset Bulanan --}}
-            <div class="bg-surface-white rounded-xl border border-border-light p-5 shadow-xs flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <h4 class="font-display text-sm font-bold text-on-surface">3. Tren Mutasi Bulanan</h4>
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container text-secondary font-bold">6 Bulan</span>
+        {{-- Baris 2: Aktivitas & Siklus Mutasi Barang --}}
+        <div class="bg-surface-white rounded-xl border border-border-light p-5 shadow-xs flex flex-col justify-between">
+            <div>
+                {{-- Header with Segmented Pill Tabs & Chart Type Toggle --}}
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                    <div>
+                        <h4 id="mutationHubTitle" class="font-display text-sm font-bold text-on-surface">Tren Mutasi Bulanan</h4>
+                        <p id="mutationHubDesc" class="text-xs text-on-surface-variant mt-0.5">Volume permohonan perpindahan antar-unit dalam 6 bulan terakhir.</p>
                     </div>
-                    <p class="text-xs text-on-surface-variant mb-3">Volume permohonan perpindahan antar-unit.</p>
-                    <div class="relative h-44">
-                        <canvas id="chartMonthlyTrends"></canvas>
+
+                    {{-- Controls: Segmented Tabs & Type Switcher --}}
+                    <div class="flex items-center gap-1.5 shrink-0 self-start sm:self-auto">
+                        <div class="inline-flex items-center p-0.5 rounded-lg bg-surface-container text-xs">
+                            <button type="button" id="tabMutationTrend" onclick="switchMutationView('trend')"
+                                    class="px-2.5 py-1 rounded-md text-xs font-semibold bg-surface-white text-secondary shadow-2xs transition-all">
+                                Tren Bulanan
+                            </button>
+                            <button type="button" id="tabMutationReceivers" onclick="switchMutationView('receivers')"
+                                    class="px-2.5 py-1 rounded-md text-xs font-medium text-on-surface-variant hover:text-on-surface transition-all">
+                                Unit Penerima
+                            </button>
+                        </div>
+
+                        <div class="inline-flex items-center p-0.5 rounded-lg bg-surface-container">
+                            <button type="button" id="btnMutationLine" onclick="toggleMutationType('line')"
+                                    class="p-1 rounded-md bg-surface-white text-secondary shadow-2xs transition-all"
+                                    title="Tampilan Garis">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+                                </svg>
+                            </button>
+                            <button type="button" id="btnMutationBar" onclick="toggleMutationType('bar')"
+                                    class="p-1 rounded-md text-on-surface-variant hover:text-on-surface transition-all"
+                                    title="Tampilan Batang">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="pt-2.5 mt-2 border-t border-border-light text-[11px] text-on-surface-variant flex items-center justify-between font-mono">
-                    <span>Total Formulir:</span>
+
+                {{-- Chart Canvas Container --}}
+                <div class="relative h-52 my-2">
+                    <canvas id="chartMutationHub"></canvas>
+                </div>
+            </div>
+
+            {{-- Dynamic Footer Legend / Breakdown --}}
+            <div>
+                {{-- Trend Footer --}}
+                <div id="mutationTrendFooter" class="pt-2.5 mt-2 border-t border-border-light text-xs text-on-surface-variant flex items-center justify-between font-mono">
+                    <span>Total Formulir Seluruh Siklus:</span>
                     <span class="font-bold text-primary">{{ $stats['pending_mutations'] + $stats['archived_mutations'] }} Form</span>
                 </div>
-            </div>
 
-            {{-- Grafik 4: Komposisi Kondisi Fisik --}}
-            <div class="bg-surface-white rounded-xl border border-border-light p-5 shadow-xs flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <h4 class="font-display text-sm font-bold text-on-surface">4. Kondisi Fisik Inventaris</h4>
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container text-emerald-800 font-bold">Kelayakan</span>
-                    </div>
-                    <p class="text-xs text-on-surface-variant mb-3">Kualitas fisik barang yang dilaporkan.</p>
-                    <div class="relative h-44 flex items-center justify-center">
-                        <canvas id="chartConditions"></canvas>
-                    </div>
-                </div>
-                <div class="pt-2.5 mt-2 border-t border-border-light text-[11px] text-on-surface-variant flex items-center justify-around font-mono">
-                    <span class="text-emerald-700 font-semibold">Baik: {{ $chartConditions['data'][0] }}</span>
-                    <span class="text-amber-700 font-semibold">Rusak Ringan: {{ $chartConditions['data'][1] }}</span>
-                    <span class="text-rose-700 font-semibold">Rusak Berat: {{ $chartConditions['data'][2] }}</span>
-                </div>
-            </div>
-
-            {{-- Grafik 5: Top 5 Unit Distribusi Penerima --}}
-            <div class="bg-surface-white rounded-xl border border-border-light p-5 shadow-xs flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <h4 class="font-display text-sm font-bold text-on-surface">5. Unit Distribusi Penerima</h4>
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container text-primary font-bold">Top 5</span>
-                    </div>
-                    <p class="text-xs text-on-surface-variant mb-3">Departemen dengan frekuensi mutasi masuk tertinggi.</p>
-                    <div class="relative h-44">
-                        <canvas id="chartTopReceivers"></canvas>
-                    </div>
-                </div>
-                <div class="pt-2.5 mt-2 border-t border-border-light text-[11px] text-on-surface-variant flex items-center justify-between font-mono">
-                    <span>Arsip Sah Terkunci:</span>
+                {{-- Receivers Footer --}}
+                <div id="mutationReceiverFooter" class="pt-2.5 mt-2 border-t border-border-light text-xs text-on-surface-variant flex items-center justify-between font-mono hidden">
+                    <span>Total Arsip Berita Acara Sah:</span>
                     <span class="font-bold text-emerald-700">{{ $stats['archived_mutations'] }} BAST</span>
                 </div>
             </div>
@@ -848,9 +927,9 @@
             resultEl.classList.add('bg-emerald-50', 'text-emerald-800', 'border-emerald-200');
             resultEl.innerHTML = `
                 <div class="flex items-start gap-2">
-                    <span class="font-bold text-sm text-emerald-700">[V]</span>
+                    <svg class="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                     <div>
-                        <p class="font-bold">Termasuk ASET RESMI WBI</p>
+                        <p class="font-bold">Termasuk Aset Resmi WBI</p>
                         <p class="text-[11px] text-emerald-700 mt-0.5">Nilai &ge; Rp 500.000. Wajib dilaporkan ke Keuangan untuk penomoran kode aset.</p>
                     </div>
                 </div>
@@ -859,9 +938,9 @@
             resultEl.classList.add('bg-amber-50', 'text-amber-800', 'border-amber-200');
             resultEl.innerHTML = `
                 <div class="flex items-start gap-2">
-                    <span class="font-bold text-sm text-amber-700">[i]</span>
+                    <svg class="w-4 h-4 text-amber-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <div>
-                        <p class="font-bold">BARANG HABIS PAKAI (Non-Asset)</p>
+                        <p class="font-bold">Barang Habis Pakai (Non-Asset)</p>
                         <p class="text-[11px] text-amber-700 mt-0.5">Nilai &lt; Rp 500.000. Langsung dicatat sebagai beban operasional tanpa kode aset.</p>
                     </div>
                 </div>
@@ -869,175 +948,104 @@
         }
     }
 
-    // Initialize 5 Charts
-    document.addEventListener('DOMContentLoaded', () => {
-        if (typeof window.Chart === 'undefined') return;
+    // Global Data Stores from Backend
+    const assetDistData = {
+        status: {
+            title: 'Distribusi Status Aset',
+            desc: 'Sebaran status operasional, gudang inventaris, dan perbaikan.',
+            labels: @json($chartStatus['labels']),
+            data: @json($chartStatus['data']),
+            colors: @json($chartStatus['colors'])
+        },
+        condition: {
+            title: 'Kondisi Fisik Barang',
+            desc: 'Kualitas fisik barang yang dilaporkan unit kerja.',
+            labels: @json($chartConditions['labels']),
+            data: @json($chartConditions['data']),
+            colors: @json($chartConditions['colors'])
+        }
+    };
 
-        Chart.defaults.font.family = 'Inter, ui-sans-serif, system-ui, sans-serif';
-        Chart.defaults.color = '#404846';
+    const mutationHubData = {
+        trend: {
+            title: 'Tren Mutasi Bulanan',
+            desc: 'Volume permohonan perpindahan antar-unit dalam 6 bulan terakhir.',
+            labels: @json($chartMonthlyTrends['labels']),
+            data: @json($chartMonthlyTrends['data'])
+        },
+        receivers: {
+            title: 'Distribusi Unit Penerima',
+            desc: 'Departemen dengan frekuensi penerimaan mutasi barang tertinggi.',
+            labels: @json($chartTopReceivers['labels']),
+            data: @json($chartTopReceivers['data'])
+        }
+    };
 
-        // 1. Chart: Distribusi Status Aset (Doughnut)
-        const ctxStatus = document.getElementById('chartAssetStatus');
-        if (ctxStatus) {
-            new Chart(ctxStatus, {
-                type: 'doughnut',
-                data: {
-                    labels: @json($chartStatus['labels']),
-                    datasets: [{
-                        data: @json($chartStatus['data']),
-                        backgroundColor: @json($chartStatus['colors']),
-                        borderWidth: 2,
-                        borderColor: '#ffffff',
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                boxWidth: 10,
-                                font: { size: 11, weight: '500' },
-                                padding: 10
-                            }
-                        }
-                    },
-                    cutout: '65%'
-                }
-            });
+    let chartAssetDistInstance = null;
+    let chartDeptValuationsInstance = null;
+    let chartMutationHubInstance = null;
+
+    let currentAssetDistView = 'status'; // 'status' | 'condition'
+    let currentAssetDistType = 'doughnut'; // 'doughnut' | 'bar'
+
+    let currentMutationView = 'trend'; // 'trend' | 'receivers'
+    let currentMutationType = 'line'; // 'line' | 'bar'
+
+    // 1. Render Asset Distribution Chart
+    function renderAssetDistChart() {
+        const canvas = document.getElementById('chartAssetDist');
+        if (!canvas || typeof window.Chart === 'undefined') return;
+
+        if (chartAssetDistInstance) {
+            chartAssetDistInstance.destroy();
         }
 
-        // 2. Chart: Valuasi Nilai Aset per Unit Kerja (Horizontal Bar)
-        const ctxValuations = document.getElementById('chartDeptValuations');
-        if (ctxValuations) {
-            new Chart(ctxValuations, {
-                type: 'bar',
+        const dataObj = assetDistData[currentAssetDistView];
+        const ctx = canvas.getContext('2d');
+
+        if (currentAssetDistType === 'doughnut') {
+            chartAssetDistInstance = new Chart(ctx, {
+                type: 'doughnut',
                 data: {
-                    labels: @json($chartValuations['labels']),
+                    labels: dataObj.labels,
                     datasets: [{
-                        label: 'Valuasi Aset',
-                        data: @json($chartValuations['data']),
-                        backgroundColor: '#134137',
-                        borderRadius: 4,
-                        barPercentage: 0.65
+                        data: dataObj.data,
+                        backgroundColor: dataObj.colors,
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 6
                     }]
                 },
                 options: {
-                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: { duration: 350 },
                     plugins: {
                         legend: { display: false },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return ' Rp ' + Number(context.raw).toLocaleString('id-ID');
+                                    const val = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const pct = total > 0 ? Math.round((val / total) * 100) : 0;
+                                    return ` ${context.label}: ${val} Unit (${pct}%)`;
                                 }
                             }
                         }
                     },
-                    scales: {
-                        x: {
-                            grid: { color: '#E5E7EB' },
-                            ticks: {
-                                font: { size: 10, family: 'JetBrains Mono, monospace' },
-                                callback: function(value) {
-                                    if (value >= 1000000000) return (value / 1000000000).toFixed(1) + ' M';
-                                    if (value >= 1000000) return (value / 1000000).toFixed(0) + ' Jt';
-                                    return value;
-                                }
-                            }
-                        },
-                        y: {
-                            grid: { display: false },
-                            ticks: { font: { size: 11, weight: '500' } }
-                        }
-                    }
+                    cutout: '70%'
                 }
             });
-        }
-
-        // 3. Chart: Tren Mutasi Aset Bulanan (Line / Area)
-        const ctxTrends = document.getElementById('chartMonthlyTrends');
-        if (ctxTrends) {
-            new Chart(ctxTrends, {
-                type: 'line',
-                data: {
-                    labels: @json($chartMonthlyTrends['labels']),
-                    datasets: [{
-                        label: 'Jumlah Mutasi',
-                        data: @json($chartMonthlyTrends['data']),
-                        borderColor: '#805600',
-                        backgroundColor: 'rgba(255, 197, 105, 0.25)',
-                        fill: true,
-                        tension: 0.35,
-                        borderWidth: 2,
-                        pointBackgroundColor: '#805600',
-                        pointRadius: 3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: { font: { size: 10 } }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#E5E7EB' },
-                            ticks: { stepSize: 1, font: { size: 10, family: 'JetBrains Mono, monospace' } }
-                        }
-                    }
-                }
-            });
-        }
-
-        // 4. Chart: Komposisi Kondisi Fisik Inventaris (Doughnut)
-        const ctxConditions = document.getElementById('chartConditions');
-        if (ctxConditions) {
-            new Chart(ctxConditions, {
-                type: 'doughnut',
-                data: {
-                    labels: @json($chartConditions['labels']),
-                    datasets: [{
-                        data: @json($chartConditions['data']),
-                        backgroundColor: @json($chartConditions['colors']),
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { boxWidth: 10, font: { size: 10 }, padding: 8 }
-                        }
-                    },
-                    cutout: '60%'
-                }
-            });
-        }
-
-        // 5. Chart: Top 5 Unit Distribusi Penerima (Bar)
-        const ctxReceivers = document.getElementById('chartTopReceivers');
-        if (ctxReceivers) {
-            new Chart(ctxReceivers, {
+        } else {
+            // Bar Chart version
+            chartAssetDistInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: @json($chartTopReceivers['labels']),
+                    labels: dataObj.labels,
                     datasets: [{
-                        label: 'Mutasi Diterima',
-                        data: @json($chartTopReceivers['data']),
-                        backgroundColor: '#537E83',
+                        label: 'Jumlah Unit',
+                        data: dataObj.data,
+                        backgroundColor: dataObj.colors,
                         borderRadius: 4,
                         barPercentage: 0.55
                     }]
@@ -1045,23 +1053,345 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: { duration: 350 },
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.raw} Unit`;
+                                }
+                            }
+                        }
                     },
                     scales: {
                         x: {
                             grid: { display: false },
-                            ticks: { font: { size: 10 } }
+                            ticks: { font: { size: 11 } }
                         },
                         y: {
                             beginAtZero: true,
-                            grid: { color: '#E5E7EB' },
-                            ticks: { stepSize: 1, font: { size: 10, family: 'JetBrains Mono, monospace' } }
+                            grid: { color: '#F1F3F5' },
+                            ticks: {
+                                precision: 0,
+                                stepSize: 1,
+                                font: { size: 10, family: 'JetBrains Mono, monospace' }
+                            }
                         }
                     }
                 }
             });
         }
+    }
+
+    // Switch View for Asset Dist Chart (Tab Pills)
+    window.switchAssetDistView = function(view) {
+        currentAssetDistView = view;
+        const info = assetDistData[view];
+
+        // Update Title & Description
+        const titleEl = document.getElementById('assetDistTitle');
+        const descEl = document.getElementById('assetDistDesc');
+        if (titleEl) titleEl.innerText = info.title;
+        if (descEl) descEl.innerText = info.desc;
+
+        // Toggle Tab Pill active state
+        const tabStatus = document.getElementById('tabAssetStatus');
+        const tabCondition = document.getElementById('tabAssetCondition');
+        if (view === 'status') {
+            if (tabStatus) tabStatus.className = 'px-2.5 py-1 rounded-md text-xs font-semibold bg-surface-white text-primary shadow-2xs transition-all';
+            if (tabCondition) tabCondition.className = 'px-2.5 py-1 rounded-md text-xs font-medium text-on-surface-variant hover:text-on-surface transition-all';
+        } else {
+            if (tabCondition) tabCondition.className = 'px-2.5 py-1 rounded-md text-xs font-semibold bg-surface-white text-primary shadow-2xs transition-all';
+            if (tabStatus) tabStatus.className = 'px-2.5 py-1 rounded-md text-xs font-medium text-on-surface-variant hover:text-on-surface transition-all';
+        }
+
+        // Toggle Footers
+        const statusFooter = document.getElementById('assetDistStatusFooter');
+        const conditionFooter = document.getElementById('assetDistConditionFooter');
+        if (view === 'status') {
+            if (statusFooter) statusFooter.classList.remove('hidden');
+            if (conditionFooter) conditionFooter.classList.add('hidden');
+        } else {
+            if (statusFooter) statusFooter.classList.add('hidden');
+            if (conditionFooter) conditionFooter.classList.remove('hidden');
+        }
+
+        renderAssetDistChart();
+    };
+
+    // Toggle Chart Type (Donut vs Bar)
+    window.toggleAssetDistType = function(type) {
+        currentAssetDistType = type;
+
+        const btnDonut = document.getElementById('btnAssetDistDonut');
+        const btnBar = document.getElementById('btnAssetDistBar');
+
+        if (type === 'doughnut') {
+            if (btnDonut) btnDonut.className = 'p-1 rounded-md bg-surface-white text-primary shadow-2xs transition-all';
+            if (btnBar) btnBar.className = 'p-1 rounded-md text-on-surface-variant hover:text-on-surface transition-all';
+        } else {
+            if (btnBar) btnBar.className = 'p-1 rounded-md bg-surface-white text-primary shadow-2xs transition-all';
+            if (btnDonut) btnDonut.className = 'p-1 rounded-md text-on-surface-variant hover:text-on-surface transition-all';
+        }
+
+        renderAssetDistChart();
+    };
+
+    // 2. Render Valuations Horizontal Bar Chart
+    function renderDeptValuationsChart() {
+        const ctxValuations = document.getElementById('chartDeptValuations');
+        if (!ctxValuations || typeof window.Chart === 'undefined') return;
+
+        if (chartDeptValuationsInstance) {
+            chartDeptValuationsInstance.destroy();
+        }
+
+        chartDeptValuationsInstance = new Chart(ctxValuations, {
+            type: 'bar',
+            data: {
+                labels: @json($chartValuations['labels']),
+                datasets: [{
+                    label: 'Valuasi Aset',
+                    data: @json($chartValuations['data']),
+                    backgroundColor: '#134137',
+                    borderRadius: 4,
+                    barPercentage: 0.6
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: function(items) {
+                                return items[0]?.label || '';
+                            },
+                            label: function(context) {
+                                return ' Valuasi: Rp ' + Number(context.raw || 0).toLocaleString('id-ID');
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: '#F1F3F5' },
+                        ticks: {
+                            font: { size: 10, family: 'JetBrains Mono, monospace' },
+                            maxTicksLimit: 5,
+                            callback: function(value) {
+                                if (value === 0) return '0';
+                                if (value >= 1000000000) return (value / 1000000000).toLocaleString('id-ID') + ' M';
+                                if (value >= 1000000) return (value / 1000000).toLocaleString('id-ID') + ' Jt';
+                                if (value >= 1000) return (value / 1000).toLocaleString('id-ID') + ' Rb';
+                                return value.toLocaleString('id-ID');
+                            }
+                        }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { size: 11, weight: '500' },
+                            callback: function(value) {
+                                const label = this.getLabelForValue(value) || '';
+                                return label.length > 18 ? label.substring(0, 16) + '...' : label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // 3. Render Mutation Hub Chart
+    function renderMutationHubChart() {
+        const canvas = document.getElementById('chartMutationHub');
+        if (!canvas || typeof window.Chart === 'undefined') return;
+
+        if (chartMutationHubInstance) {
+            chartMutationHubInstance.destroy();
+        }
+
+        const dataObj = mutationHubData[currentMutationView];
+        const ctx = canvas.getContext('2d');
+        const isTrend = (currentMutationView === 'trend');
+
+        if (currentMutationType === 'line') {
+            const strokeColor = isTrend ? '#805600' : '#134137';
+            const fillColor = isTrend ? 'rgba(255, 197, 105, 0.2)' : 'rgba(19, 65, 55, 0.12)';
+
+            chartMutationHubInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dataObj.labels,
+                    datasets: [{
+                        label: isTrend ? 'Jumlah Mutasi' : 'Mutasi Diterima',
+                        data: dataObj.data,
+                        borderColor: strokeColor,
+                        backgroundColor: fillColor,
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 2,
+                        pointBackgroundColor: strokeColor,
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 350 },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.raw} ${isTrend ? 'Form Mutasi' : 'Mutasi Diterima'}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 11 } }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#F1F3F5' },
+                            ticks: {
+                                precision: 0,
+                                stepSize: 1,
+                                font: { size: 10, family: 'JetBrains Mono, monospace' }
+                            }
+                        }
+                    }
+                }
+            });
+        } else {
+            // Bar Chart version
+            const barColor = isTrend ? '#805600' : '#537E83';
+
+            chartMutationHubInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dataObj.labels,
+                    datasets: [{
+                        label: isTrend ? 'Jumlah Mutasi' : 'Mutasi Diterima',
+                        data: dataObj.data,
+                        backgroundColor: barColor,
+                        borderRadius: 4,
+                        barPercentage: 0.55
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 350 },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.raw} ${isTrend ? 'Form Mutasi' : 'Mutasi Diterima'}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 11 } }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#F1F3F5' },
+                            ticks: {
+                                precision: 0,
+                                stepSize: 1,
+                                font: { size: 10, family: 'JetBrains Mono, monospace' }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    function updateMutationTypeButtonUI(type) {
+        const btnLine = document.getElementById('btnMutationLine');
+        const btnBar = document.getElementById('btnMutationBar');
+
+        if (type === 'line') {
+            if (btnLine) btnLine.className = 'p-1 rounded-md bg-surface-white text-secondary shadow-2xs transition-all';
+            if (btnBar) btnBar.className = 'p-1 rounded-md text-on-surface-variant hover:text-on-surface transition-all';
+        } else {
+            if (btnBar) btnBar.className = 'p-1 rounded-md bg-surface-white text-primary shadow-2xs transition-all';
+            if (btnLine) btnLine.className = 'p-1 rounded-md text-on-surface-variant hover:text-on-surface transition-all';
+        }
+    }
+
+    // Switch View for Mutation Hub Chart (Tab Pills)
+    window.switchMutationView = function(view) {
+        currentMutationView = view;
+        currentMutationType = (view === 'trend') ? 'line' : 'bar';
+
+        const info = mutationHubData[view];
+
+        // Update Title & Description
+        const titleEl = document.getElementById('mutationHubTitle');
+        const descEl = document.getElementById('mutationHubDesc');
+        if (titleEl) titleEl.innerText = info.title;
+        if (descEl) descEl.innerText = info.desc;
+
+        // Toggle Tab Pill active state
+        const tabTrend = document.getElementById('tabMutationTrend');
+        const tabReceivers = document.getElementById('tabMutationReceivers');
+        if (view === 'trend') {
+            if (tabTrend) tabTrend.className = 'px-2.5 py-1 rounded-md text-xs font-semibold bg-surface-white text-secondary shadow-2xs transition-all';
+            if (tabReceivers) tabReceivers.className = 'px-2.5 py-1 rounded-md text-xs font-medium text-on-surface-variant hover:text-on-surface transition-all';
+        } else {
+            if (tabReceivers) tabReceivers.className = 'px-2.5 py-1 rounded-md text-xs font-semibold bg-surface-white text-secondary shadow-2xs transition-all';
+            if (tabTrend) tabTrend.className = 'px-2.5 py-1 rounded-md text-xs font-medium text-on-surface-variant hover:text-on-surface transition-all';
+        }
+
+        // Toggle Footers
+        const trendFooter = document.getElementById('mutationTrendFooter');
+        const receiverFooter = document.getElementById('mutationReceiverFooter');
+        if (view === 'trend') {
+            if (trendFooter) trendFooter.classList.remove('hidden');
+            if (receiverFooter) receiverFooter.classList.add('hidden');
+        } else {
+            if (trendFooter) trendFooter.classList.add('hidden');
+            if (receiverFooter) receiverFooter.classList.remove('hidden');
+        }
+
+        updateMutationTypeButtonUI(currentMutationType);
+        renderMutationHubChart();
+    };
+
+    // Toggle Chart Type (Line vs Bar)
+    window.toggleMutationType = function(type) {
+        currentMutationType = type;
+        updateMutationTypeButtonUI(type);
+        renderMutationHubChart();
+    };
+
+    // Initialize all Charts on Page Load
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof window.Chart === 'undefined') return;
+
+        Chart.defaults.font.family = 'Inter, ui-sans-serif, system-ui, sans-serif';
+        Chart.defaults.color = '#404846';
+
+        renderAssetDistChart();
+        renderDeptValuationsChart();
+        renderMutationHubChart();
     });
 </script>
 @endpush
