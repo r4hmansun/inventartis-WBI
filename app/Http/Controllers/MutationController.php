@@ -114,8 +114,12 @@ class MutationController extends Controller
             }
             $fromDepartment = $user->department;
         } else {
-            // Admin, Finance, or Inventory staff can pick origin or default to Gudang INV
-            $selectedFromDeptId = $request->get('from_department_id', $user->department_id);
+            // For inventory / finance / admin staff, default to GDG-INV (Gudang Inventaris) so newly registered items are immediately selectable
+            $defaultDept = ($user->hasRole('inventory') || $user->hasRole('finance'))
+                ? (Department::where('code', 'GDG-INV')->first() ?? $user->department)
+                : ($user->department ?? Department::where('code', 'GDG-INV')->first());
+
+            $selectedFromDeptId = $request->get('from_department_id', $defaultDept?->id);
             $fromDepartment = Department::find($selectedFromDeptId)
                 ?? Department::where('code', 'GDG-INV')->first()
                 ?? Department::first();
@@ -133,13 +137,22 @@ class MutationController extends Controller
             ->orderBy('name')
             ->get();
 
-        $allDepartments = Department::active()->orderBy('name')->get();
+        $allDepartments = Department::active()
+            ->withCount(['assets' => function ($q) {
+                $q->whereIn('status', ['active', 'in_storage']);
+            }])
+            ->orderByRaw("CASE WHEN code = 'GDG-INV' THEN 0 ELSE 1 END")
+            ->orderBy('name')
+            ->get();
+
+        $gudangInvDept = Department::where('code', 'GDG-INV')->first();
 
         return view('mutations.create', compact(
             'fromDepartment',
             'availableAssets',
             'targetDepartments',
             'allDepartments',
+            'gudangInvDept',
             'user'
         ));
     }

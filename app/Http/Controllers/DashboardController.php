@@ -100,6 +100,66 @@ class DashboardController extends Controller
                 ->get();
         }
 
+        // 5 Executive & Operational Charts Data
+        // 1. Chart: Distribusi Status Aset (Doughnut)
+        $chartStatus = [
+            'labels' => ['Aktif Operasional', 'Gudang Inventaris', 'Dalam Perbaikan', 'Dihapuskan'],
+            'data' => [$activeAssets, $inStorageAssets, $underRepairAssets, $disposedAssets],
+            'colors' => ['#2D6A4F', '#537E83', '#D97706', '#991B1B'],
+        ];
+
+        // 2. Chart: Valuasi Nilai Aset per Unit Kerja (Horizontal Bar)
+        $topDeptValuations = Department::where('is_active', true)
+            ->withSum('assets', 'purchase_price')
+            ->orderBy('assets_sum_purchase_price', 'desc')
+            ->take(6)
+            ->get();
+        $chartValuations = [
+            'labels' => $topDeptValuations->pluck('name')->toArray(),
+            'data' => $topDeptValuations->pluck('assets_sum_purchase_price')->map(fn ($v) => (float) ($v ?? 0))->toArray(),
+        ];
+
+        // 3. Chart: Tren Mutasi Aset 6 Bulan Terakhir (Line / Area)
+        $trendLabels = [];
+        $trendData = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $d = now()->subMonths($i);
+            $trendLabels[] = $d->format('M Y');
+            $trendData[] = MutationForm::whereYear('created_at', $d->year)
+                ->whereMonth('created_at', $d->month)
+                ->count();
+        }
+        $chartMonthlyTrends = [
+            'labels' => $trendLabels,
+            'data' => $trendData,
+        ];
+
+        // 4. Chart: Komposisi Kondisi Fisik Barang (Doughnut)
+        $condGood = \App\Models\MutationItem::where('item_condition', 'good')->count();
+        $condLight = \App\Models\MutationItem::where('item_condition', 'damaged_light')->count();
+        $condHeavy = \App\Models\MutationItem::where('item_condition', 'damaged_heavy')->count();
+        if ($condGood === 0 && $condLight === 0 && $condHeavy === 0) {
+            $condGood = $activeAssets + $inStorageAssets;
+            $condLight = $underRepairAssets;
+            $condHeavy = $disposedAssets;
+        }
+        $chartConditions = [
+            'labels' => ['Kondisi Baik', 'Rusak Ringan', 'Rusak Berat'],
+            'data' => [$condGood, $condLight, $condHeavy],
+            'colors' => ['#2D6A4F', '#D97706', '#991B1B'],
+        ];
+
+        // 5. Chart: Top 5 Unit Distribusi Penerima Mutasi (Bar)
+        $topReceivers = Department::where('is_active', true)
+            ->withCount('incomingMutations')
+            ->orderBy('incoming_mutations_count', 'desc')
+            ->take(5)
+            ->get();
+        $chartTopReceivers = [
+            'labels' => $topReceivers->pluck('name')->toArray(),
+            'data' => $topReceivers->pluck('incoming_mutations_count')->toArray(),
+        ];
+
         return view('dashboard', compact(
             'user',
             'stats',
@@ -113,7 +173,12 @@ class DashboardController extends Controller
             'deptRepairAssets',
             'deptValuation',
             'deptAssets',
-            'deptMutations'
+            'deptMutations',
+            'chartStatus',
+            'chartValuations',
+            'chartMonthlyTrends',
+            'chartConditions',
+            'chartTopReceivers'
         ));
     }
 }

@@ -1,5 +1,8 @@
 // WBI Inventaris — Main Application JS
 import './alerts.js';
+import Chart from 'chart.js/auto';
+
+window.Chart = Chart;
 
 // Format currency to Indonesian Rupiah format
 window.formatRupiah = function(angka) {

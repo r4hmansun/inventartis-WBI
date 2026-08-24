@@ -54,18 +54,33 @@
                 {{-- Origin Department --}}
                 <div class="p-4 rounded-lg bg-surface-container/30 border border-border-light">
                     <label class="block text-xs font-semibold text-on-surface-variant mb-1 uppercase tracking-wider">
-                        Departemen Asal (Penyerah)
+                        Departemen Asal (Penyerah) <span class="text-rose-600">*</span>
                     </label>
-                    <input type="hidden" name="from_department_id" value="{{ $fromDepartment->id }}">
-                    <div class="flex items-center gap-2 mt-1">
-                        <span class="font-mono text-xs px-2 py-0.5 rounded bg-surface-container text-primary font-bold">
-                            {{ $fromDepartment->code }}
-                        </span>
-                        <span class="text-sm font-bold text-on-surface">{{ $fromDepartment->name }}</span>
-                    </div>
-                    <p class="text-[11px] text-on-surface-variant mt-1">
-                        Diajukan oleh: <strong class="text-on-surface">{{ $user->name }}</strong>
-                    </p>
+                    @if($user->hasRole('inventory') || $user->hasRole('admin'))
+                        <select name="from_department_id" id="from_department_id"
+                                onchange="window.location.href='{{ route('mutations.create') }}?from_department_id=' + this.value"
+                                class="w-full mt-1 px-3 py-2 rounded-md border border-outline-variant bg-surface-white text-on-surface text-xs sm:text-sm font-semibold focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20">
+                            @foreach($allDepartments as $dept)
+                                <option value="{{ $dept->id }}" {{ $fromDepartment->id == $dept->id ? 'selected' : '' }}>
+                                    {{ $dept->name }} ({{ $dept->code }}) — {{ $dept->assets_count }} unit aset
+                                </option>
+                            @endforeach
+                        </select>
+                        <p class="text-[11px] text-on-surface-variant mt-1.5">
+                            Pilih unit asal barang (aset baru dari Keuangan tersimpan di <strong>Gudang Inventaris [GDG-INV]</strong>).
+                        </p>
+                    @else
+                        <input type="hidden" name="from_department_id" value="{{ $fromDepartment->id }}">
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="font-mono text-xs px-2 py-0.5 rounded bg-surface-container text-primary font-bold">
+                                {{ $fromDepartment->code }}
+                            </span>
+                            <span class="text-sm font-bold text-on-surface">{{ $fromDepartment->name }}</span>
+                        </div>
+                        <p class="text-[11px] text-on-surface-variant mt-1">
+                            Diajukan oleh: <strong class="text-on-surface">{{ $user->name }}</strong>
+                        </p>
+                    @endif
                 </div>
 
                 {{-- Destination Department --}}
@@ -104,9 +119,18 @@
                 </div>
 
                 @if($availableAssets->isEmpty())
-                <div class="p-6 rounded-lg bg-stone-50 border border-stone-200 text-center text-xs text-on-surface-variant space-y-1">
-                    <p class="font-semibold text-on-surface">Tidak ada aset aktif di unit {{ $fromDepartment->name }}.</p>
-                    <p class="text-[11px]">Pastikan barang telah terdaftar dan berada di bawah tanggung jawab unit Anda.</p>
+                <div class="p-6 rounded-lg bg-stone-50 border border-stone-200 text-center text-xs text-on-surface-variant space-y-2">
+                    <p class="font-semibold text-on-surface">Tidak ada aset aktif di unit {{ $fromDepartment->name }} ({{ $fromDepartment->code }}).</p>
+                    <p class="text-[11px]">Pastikan barang telah terdaftar dan berada di bawah tanggung jawab unit ini.</p>
+                    @if(($user->hasRole('inventory') || $user->hasRole('admin')) && $fromDepartment->code !== 'GDG-INV')
+                        <div class="pt-2">
+                            <a href="{{ route('mutations.create', ['from_department_id' => $gudangInvDept?->id]) }}"
+                               class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-emerald-600 text-white font-medium text-xs hover:bg-emerald-700 transition-colors shadow-xs">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                                Beralih ke Gudang Inventaris (GDG-INV) &mdash; Tempat Masuk Aset Baru
+                            </a>
+                        </div>
+                    @endif
                 </div>
                 @else
                 <div class="rounded-lg border border-border-light overflow-hidden divide-y divide-border-light max-h-80 overflow-y-auto">

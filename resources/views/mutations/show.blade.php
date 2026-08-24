@@ -278,28 +278,29 @@
                     </div>
 
                     <div class="flex flex-col gap-2 pt-1">
-                        <form method="POST" action="{{ route('mutations.approve-receiver', $mutation) }}">
+                        <form id="approve-receiver-form" method="POST" action="{{ route('mutations.approve-receiver', $mutation) }}">
                             @csrf
-                            <button type="submit"
-                                    class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800 transition-all shadow-xs">
+                            <button type="button"
+                                    onclick="confirmReceiverApproval()"
+                                    class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800 transition-all shadow-xs cursor-pointer">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                                 Setujui Mutasi (Approval Penerima)
                             </button>
                         </form>
 
                         <button type="button" onclick="document.getElementById('reject-box').classList.toggle('hidden')"
-                                class="w-full py-1.5 text-center text-xs font-semibold text-rose-700 hover:text-rose-900 transition-colors">
+                                class="w-full py-1.5 text-center text-xs font-semibold text-rose-700 hover:text-rose-900 transition-colors cursor-pointer">
                             Tolak Pengajuan Mutasi
                         </button>
 
                         <div id="reject-box" class="hidden p-3 rounded-md bg-white border border-rose-200 space-y-2 mt-1">
-                            <form method="POST" action="{{ route('mutations.reject', $mutation) }}" class="space-y-2">
+                            <form id="reject-form" method="POST" action="{{ route('mutations.reject', $mutation) }}" class="space-y-2">
                                 @csrf
                                 <label for="rejection_reason" class="block text-[11px] font-semibold text-rose-900">Alasan Penolakan:</label>
                                 <textarea name="rejection_reason" id="rejection_reason" rows="2" required
                                           placeholder="Tuliskan alasan penolakan..."
                                           class="w-full p-2 text-xs border border-rose-300 rounded focus:outline-none focus:ring-1 focus:ring-rose-500"></textarea>
-                                <button type="submit" class="w-full py-1.5 rounded bg-rose-700 text-white text-xs font-semibold hover:bg-rose-800 transition-colors">
+                                <button type="submit" class="w-full py-1.5 rounded bg-rose-700 text-white text-xs font-semibold hover:bg-rose-800 transition-colors cursor-pointer">
                                     Konfirmasi Tolak Mutasi
                                 </button>
                             </form>
@@ -354,11 +355,11 @@
                         </p>
                     </div>
 
-                    <form method="POST" action="{{ route('mutations.execute', $mutation) }}">
+                    <form id="execute-form" method="POST" action="{{ route('mutations.execute', $mutation) }}">
                         @csrf
-                        <button type="submit"
-                                onclick="return confirm('Apakah Anda yakin ingin mengeksekusi mutasi aset ini secara definitif?')"
-                                class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary-light transition-all shadow-xs">
+                        <button type="button"
+                                onclick="confirmExecuteMutation()"
+                                class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary-light transition-all shadow-xs cursor-pointer">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             Eksekusi Pemindahan &amp; Arsipkan Mutasi
                         </button>
@@ -376,4 +377,83 @@
         </div>
     </div>
 </div>
+
+<script>
+function confirmExecuteMutation() {
+    if (typeof window.WbiSwal !== 'undefined') {
+        window.WbiSwal.fire({
+            title: 'Konfirmasi Eksekusi Mutasi',
+            html: `
+                <div class="text-left space-y-3 pt-1">
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                        Apakah Anda yakin ingin mengeksekusi mutasi aset ini secara resmi?
+                    </p>
+                    <div class="p-3 rounded-lg bg-surface-container/60 border border-border-light space-y-1.5 text-xs font-mono">
+                        <div class="flex justify-between">
+                            <span class="text-on-surface-variant font-sans">No. Formulir:</span>
+                            <span class="font-bold text-primary-light">{{ $mutation->form_number }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-on-surface-variant font-sans">Dari:</span>
+                            <span class="font-semibold text-on-surface">{{ $mutation->fromDepartment->name }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-on-surface-variant font-sans">Tujuan:</span>
+                            <span class="font-semibold text-on-surface">{{ $mutation->toDepartment->name }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-on-surface-variant font-sans">Jumlah Aset:</span>
+                            <span class="font-bold text-emerald-800">{{ $mutation->items->count() }} unit aset</span>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-on-surface-variant/80">
+                        Kepemilikan aset akan resmi berpindah dan dokumen Berita Acara (BAST) otomatis diarsipkan secara permanen.
+                    </p>
+                </div>
+            `,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Eksekusi Mutasi',
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+            focusCancel: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('execute-form').submit();
+            }
+        });
+    } else {
+        document.getElementById('execute-form').submit();
+    }
+}
+
+function confirmReceiverApproval() {
+    if (typeof window.WbiSwal !== 'undefined') {
+        window.WbiSwal.fire({
+            title: 'Konfirmasi Penerimaan Aset',
+            html: `
+                <div class="text-left space-y-3 pt-1">
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                        Anda akan menyetujui penerimaan <strong>{{ $mutation->items->count() }} unit aset</strong> untuk unit kerja <strong>{{ $mutation->toDepartment->name }}</strong>.
+                    </p>
+                    <p class="text-[11px] text-on-surface-variant/80">
+                        Persetujuan digital Anda akan dicatat dengan stempel waktu resmi.
+                    </p>
+                </div>
+            `,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Setujui Penerimaan',
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('approve-receiver-form').submit();
+            }
+        });
+    } else {
+        document.getElementById('approve-receiver-form').submit();
+    }
+}
+</script>
 @endsection
