@@ -55,39 +55,27 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Create sample departmental users
-        $heDept = Department::where('code', 'HE')->first();
-        $wbicDept = Department::where('code', 'WBIC')->first();
-        $pkaDept = Department::where('code', 'PKA')->first();
+        // Create sample departmental users for ALL departments
+        $departmentUsers = [
+            ['code' => 'HE', 'email' => 'user.he@wbi.co.id', 'name' => 'User Heavy Equipment'],
+            ['code' => 'WBIC', 'email' => 'user.wbic@wbi.co.id', 'name' => 'User WBI Center'],
+            ['code' => 'PKA', 'email' => 'user.pka@wbi.co.id', 'name' => 'User PKA'],
+            ['code' => 'GA', 'email' => 'user.ga@wbi.co.id', 'name' => 'User General Affairs'],
+            ['code' => 'IT', 'email' => 'user.it@wbi.co.id', 'name' => 'User IT Staff'],
+            ['code' => 'HR', 'email' => 'user.hr@wbi.co.id', 'name' => 'User Human Resources'],
+        ];
 
-        User::firstOrCreate(
-            ['email' => 'user.he@wbi.co.id'],
-            [
-                'name' => 'User HE',
-                'password' => 'password',
-                'department_id' => $heDept?->id,
-                'role' => 'user',
-            ]
-        );
-
-        User::firstOrCreate(
-            ['email' => 'user.wbic@wbi.co.id'],
-            [
-                'name' => 'User WBIC',
-                'password' => 'password',
-                'department_id' => $wbicDept?->id,
-                'role' => 'user',
-            ]
-        );
-
-        User::firstOrCreate(
-            ['email' => 'user.pka@wbi.co.id'],
-            [
-                'name' => 'User PKA',
-                'password' => 'password',
-                'department_id' => $pkaDept?->id,
-                'role' => 'user',
-            ]
-        );
+        foreach ($departmentUsers as $deptUser) {
+            $dept = Department::where('code', $deptUser['code'])->first();
+            User::firstOrCreate(
+                ['email' => $deptUser['email']],
+                [
+                    'name' => $deptUser['name'],
+                    'password' => 'password',
+                    'department_id' => $dept?->id,
+                    'role' => 'user',
+                ]
+            );
+        }
     }
 }

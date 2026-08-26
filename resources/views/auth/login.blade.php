@@ -90,35 +90,73 @@
 </div>
 
 {{-- Demo credentials --}}
-<div class="mt-6 p-4 rounded-lg bg-surface-container border border-outline-variant/50">
-    <div class="flex items-center justify-between mb-2.5">
-        <p class="text-xs font-semibold text-on-surface-variant">Akun Demo (Klik untuk auto-fill):</p>
+<div class="mt-6 p-4 rounded-lg bg-surface-container border border-outline-variant/50 space-y-3">
+    <div class="flex items-center justify-between">
+        <p class="text-xs font-semibold text-on-surface-variant">Akun Demo Cepat (Klik untuk auto-fill):</p>
         <span class="text-[10px] text-primary-light bg-primary-container px-2 py-0.5 rounded font-medium">Klik &amp; Masuk</span>
     </div>
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
-        <button type="button"
-                onclick="fillDemo('admin@wbi.co.id', 'password')"
-                class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
-            Admin
-        </button>
-        <button type="button"
-                onclick="fillDemo('keuangan@wbi.co.id', 'password')"
-                class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
-            Keuangan
-        </button>
-        <button type="button"
-                onclick="fillDemo('inventaris@wbi.co.id', 'password')"
-                class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
-            Inventaris
-        </button>
-        <button type="button"
-                onclick="fillDemo('user.he@wbi.co.id', 'password')"
-                class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
-            User / Staff
-        </button>
+
+    {{-- Kategori 1: Role Khusus --}}
+    <div>
+        <p class="text-[11px] font-mono font-semibold text-on-surface-variant/80 mb-1.5 uppercase tracking-wider">Role Otoritas</p>
+        <div class="grid grid-cols-3 gap-2">
+            <button type="button"
+                    onclick="fillDemo('admin@wbi.co.id', 'password')"
+                    class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
+                Super Admin
+            </button>
+            <button type="button"
+                    onclick="fillDemo('keuangan@wbi.co.id', 'password')"
+                    class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
+                Keuangan
+            </button>
+            <button type="button"
+                    onclick="fillDemo('inventaris@wbi.co.id', 'password')"
+                    class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
+                Inventaris
+            </button>
+        </div>
     </div>
+
+    {{-- Kategori 2: User Tiap Departemen --}}
+    <div>
+        <p class="text-[11px] font-mono font-semibold text-on-surface-variant/80 mb-1.5 uppercase tracking-wider">User Tiap Departemen</p>
+        <div class="grid grid-cols-3 gap-2">
+            <button type="button"
+                    onclick="fillDemo('user.he@wbi.co.id', 'password')"
+                    class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
+                User HE
+            </button>
+            <button type="button"
+                    onclick="fillDemo('user.wbic@wbi.co.id', 'password')"
+                    class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
+                User WBIC
+            </button>
+            <button type="button"
+                    onclick="fillDemo('user.pka@wbi.co.id', 'password')"
+                    class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
+                User PKA
+            </button>
+            <button type="button"
+                    onclick="fillDemo('user.ga@wbi.co.id', 'password')"
+                    class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
+                User GA
+            </button>
+            <button type="button"
+                    onclick="fillDemo('user.it@wbi.co.id', 'password')"
+                    class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
+                User IT
+            </button>
+            <button type="button"
+                    onclick="fillDemo('user.hr@wbi.co.id', 'password')"
+                    class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
+                User HR
+            </button>
+        </div>
+    </div>
+
     <div class="text-[11px] text-on-surface-variant/80 border-t border-outline-variant/40 pt-2 flex items-center justify-between">
-        <span>Password semua demo:</span>
+        <span>Password semua akun:</span>
         <code class="text-primary font-mono font-semibold bg-surface-white px-1.5 py-0.5 rounded border border-outline-variant/40">password</code>
     </div>
 </div>
