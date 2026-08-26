@@ -98,12 +98,17 @@
 
     {{-- Kategori 1: Role Khusus --}}
     <div>
-        <p class="text-[11px] font-mono font-semibold text-on-surface-variant/80 mb-1.5 uppercase tracking-wider">Role Otoritas</p>
-        <div class="grid grid-cols-3 gap-2">
+        <p class="text-[11px] font-mono font-semibold text-on-surface-variant/80 mb-1.5 uppercase tracking-wider">Role Otoritas &amp; Manajemen</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
             <button type="button"
                     onclick="fillDemo('admin@wbi.co.id', 'password')"
                     class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
                 Super Admin
+            </button>
+            <button type="button"
+                    onclick="fillDemo('admin.biasa@wbi.co.id', 'password')"
+                    class="px-2 py-1.5 text-xs font-medium rounded-md bg-surface-white border border-outline-variant hover:border-primary hover:text-primary transition-all text-center shadow-xs">
+                Admin Biasa
             </button>
             <button type="button"
                     onclick="fillDemo('keuangan@wbi.co.id', 'password')"
