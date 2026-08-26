@@ -4,7 +4,7 @@
 @section('page-title', 'Daftar Aset & Inventaris')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-5">
+<div class="max-w-7xl mx-auto space-y-5 w-full min-w-0">
     {{-- Header --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -27,7 +27,7 @@
 
     {{-- Tabs Lingkup (Khusus Pengguna dengan Departemen) --}}
     @if($userDepartment)
-    <div class="flex items-center gap-2 border-b border-border-light pb-2">
+    <div class="flex items-center gap-2 border-b border-border-light pb-2 overflow-x-auto whitespace-nowrap scrollbar-none">
         <a href="{{ route('assets.index', ['scope' => 'my_dept']) }}"
            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all
                   {{ request('scope') === 'my_dept' ? 'bg-primary text-white shadow-xs' : 'bg-surface-white text-on-surface-variant hover:bg-surface-container border border-border-light' }}">
@@ -123,7 +123,7 @@
     {{-- Assets Table --}}
     <div class="bg-surface-white rounded-xl border border-border-light overflow-hidden shadow-xs">
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left">
+            <table class="w-full text-sm text-left min-w-[700px]">
                 <thead class="sticky top-0 z-10">
                     <tr class="bg-surface-container/80 border-b border-border-light text-[11px] font-mono font-semibold text-on-surface-variant uppercase tracking-wider">
                         <th class="px-5 py-3">Kode Aset</th>

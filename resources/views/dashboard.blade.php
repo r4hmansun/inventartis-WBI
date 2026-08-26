@@ -4,7 +4,7 @@
 @section('page-title', auth()->user()->hasRole('user') ? 'Portal Inventaris Unit Anda' : 'Ringkasan Eksekutif & Operasional')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="max-w-7xl mx-auto space-y-6 w-full min-w-0">
 
     @if(auth()->user()->hasRole('user'))
     {{-- ========================================================================= --}}
@@ -192,7 +192,7 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
+            <table class="w-full text-left text-sm min-w-[600px]">
                 <thead>
                     <tr class="bg-surface-container/60 border-b border-border-light text-[11px] font-mono font-semibold text-on-surface-variant uppercase tracking-wider">
                         <th class="px-5 py-3">Kode Aset</th>
@@ -566,7 +566,7 @@
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm">
+                    <table class="w-full text-left text-sm min-w-[550px]">
                         <thead>
                             <tr class="bg-surface-container/60 border-b border-border-light text-[11px] font-mono font-semibold text-on-surface-variant uppercase tracking-wider">
                                 <th class="px-4 py-2.5">Kode Aset</th>

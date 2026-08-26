@@ -15,13 +15,13 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-neutral-bg font-body text-on-surface min-h-screen">
-    <div class="flex min-h-screen">
+<body class="bg-neutral-bg font-body text-on-surface min-h-screen overflow-x-hidden">
+    <div class="flex min-h-screen w-full max-w-full overflow-x-hidden">
         {{-- Sidebar --}}
         @include('components.sidebar')
 
         {{-- Main Content --}}
-        <div class="flex-1 flex flex-col min-h-screen lg:ml-[260px]">
+        <div class="flex-1 min-w-0 w-full max-w-full flex flex-col min-h-screen lg:ml-[260px] overflow-x-hidden">
             {{-- Top Bar --}}
             <header class="sticky top-0 z-30 bg-surface-white/95 backdrop-blur-xs border-b border-border-light px-4 sm:px-6 py-3 flex items-center justify-between" style="box-shadow: var(--shadow-soft);">
                 <div class="flex items-center gap-3">
@@ -31,8 +31,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                         </svg>
                     </button>
-
-                    <img src="{{ asset('images/logo.png') }}" alt="WBI Logo" class="h-6 w-auto object-contain lg:hidden">
 
                     {{-- Page title & Breadcrumb --}}
                     <div>
@@ -69,26 +67,26 @@
 
             {{-- Flash Messages --}}
             @if(session('success'))
-                <div class="mx-6 mt-4 px-4 py-3 rounded-md bg-primary-surface text-primary-light text-sm font-medium flex items-center gap-2" role="alert">
+                <div class="mx-4 sm:mx-6 mt-4 px-4 py-3 rounded-md bg-primary-surface text-primary-light text-sm font-medium flex items-center gap-2" role="alert">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                     {{ session('success') }}
                 </div>
             @endif
 
             @if(session('error'))
-                <div class="mx-6 mt-4 px-4 py-3 rounded-md bg-red-50 text-danger text-sm font-medium flex items-center gap-2" role="alert">
+                <div class="mx-4 sm:mx-6 mt-4 px-4 py-3 rounded-md bg-red-50 text-danger text-sm font-medium flex items-center gap-2" role="alert">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     {{ session('error') }}
                 </div>
             @endif
 
             {{-- Page Content --}}
-            <main class="flex-1 p-6">
+            <main class="flex-1 p-4 sm:p-6 min-w-0 w-full max-w-full">
                 @yield('content')
             </main>
 
             {{-- Footer --}}
-            <footer class="border-t border-border-light px-6 py-4 text-center text-xs text-on-surface-variant">
+            <footer class="border-t border-border-light px-4 sm:px-6 py-4 text-center text-xs text-on-surface-variant">
                 &copy; {{ date('Y') }} WBI — Sistem Manajemen Inventaris & Mutasi Aset
             </footer>
         </div>

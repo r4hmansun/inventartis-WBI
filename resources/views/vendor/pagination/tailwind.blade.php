@@ -1,25 +1,43 @@
 @if ($paginator->hasPages())
-    <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-between">
-        <div class="flex justify-between flex-1 sm:hidden">
-            @if ($paginator->onFirstPage())
-                <span class="relative inline-flex items-center px-3 py-1.5 text-xs font-semibold text-on-surface-variant/50 bg-surface-container rounded-lg cursor-not-allowed">
-                    &laquo; Sebelumnya
-                </span>
-            @else
-                <a href="{{ $paginator->previousPageUrl() }}" class="relative inline-flex items-center px-3 py-1.5 text-xs font-semibold text-on-surface bg-surface-white border border-border-light rounded-lg hover:bg-surface-container transition-colors shadow-2xs">
-                    &laquo; Sebelumnya
-                </a>
-            @endif
+    <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-between w-full">
+        {{-- Mobile Pagination View --}}
+        <div class="flex items-center justify-between w-full sm:hidden gap-2">
+            <div>
+                @if ($paginator->onFirstPage())
+                    <span class="inline-flex items-center gap-1 px-3 py-2 text-xs font-semibold text-on-surface-variant/40 bg-surface-container/60 rounded-lg cursor-not-allowed border border-border-light/60">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        Prev
+                    </span>
+                @else
+                    <a href="{{ $paginator->previousPageUrl() }}" class="inline-flex items-center gap-1 px-3 py-2 text-xs font-semibold text-on-surface bg-surface-white border border-border-light rounded-lg hover:bg-surface-container transition-colors shadow-2xs">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        Prev
+                    </a>
+                @endif
+            </div>
 
-            @if ($paginator->hasMorePages())
-                <a href="{{ $paginator->nextPageUrl() }}" class="relative inline-flex items-center px-3 py-1.5 text-xs font-semibold text-on-surface bg-surface-white border border-border-light rounded-lg hover:bg-surface-container transition-colors shadow-2xs">
-                    Selanjutnya &raquo;
-                </a>
-            @else
-                <span class="relative inline-flex items-center px-3 py-1.5 text-xs font-semibold text-on-surface-variant/50 bg-surface-container rounded-lg cursor-not-allowed">
-                    Selanjutnya &raquo;
+            <div class="text-center">
+                <span class="font-mono text-xs font-semibold text-on-surface">
+                    Hal. {{ $paginator->currentPage() }} / {{ $paginator->lastPage() }}
                 </span>
-            @endif
+                <span class="text-[10px] text-on-surface-variant block font-mono">
+                    ({{ $paginator->total() }} Data)
+                </span>
+            </div>
+
+            <div>
+                @if ($paginator->hasMorePages())
+                    <a href="{{ $paginator->nextPageUrl() }}" class="inline-flex items-center gap-1 px-3 py-2 text-xs font-semibold text-on-surface bg-surface-white border border-border-light rounded-lg hover:bg-surface-container transition-colors shadow-2xs">
+                        Next
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </a>
+                @else
+                    <span class="inline-flex items-center gap-1 px-3 py-2 text-xs font-semibold text-on-surface-variant/40 bg-surface-container/60 rounded-lg cursor-not-allowed border border-border-light/60">
+                        Next
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </span>
+                @endif
+            </div>
         </div>
 
         <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between gap-4">

@@ -4,7 +4,7 @@
 @section('page-title', 'Mutasi Aset')
 
 @section('content')
-<div class="max-w-7xl mx-auto space-y-5">
+<div class="max-w-7xl mx-auto space-y-5 w-full min-w-0">
     {{-- Header Bar --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -24,7 +24,7 @@
     </div>
 
     {{-- Tabs Lingkup / Filter Cepat Status --}}
-    <div class="flex flex-wrap items-center gap-2 border-b border-border-light pb-2">
+    <div class="flex items-center gap-2 border-b border-border-light pb-2 overflow-x-auto whitespace-nowrap scrollbar-none">
         <a href="{{ route('mutations.index') }}"
            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all
                   {{ !request('scope') && !request('status') ? 'bg-primary text-white shadow-xs' : 'bg-surface-white text-on-surface-variant hover:bg-surface-container border border-border-light' }}">
@@ -137,7 +137,7 @@
     {{-- Mutations Table --}}
     <div class="bg-surface-white rounded-xl border border-border-light overflow-hidden shadow-xs">
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
+            <table class="w-full text-left text-sm min-w-[700px]">
                 <thead>
                     <tr class="bg-surface-container/60 border-b border-border-light text-[11px] font-mono font-semibold text-on-surface-variant uppercase tracking-wider">
                         <th class="px-5 py-3.5">No. Formulir</th>

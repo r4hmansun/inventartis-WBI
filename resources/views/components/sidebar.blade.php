@@ -102,13 +102,4 @@
         </div>
         @endif
     </nav>
-
-    {{-- Sidebar footer: Clean System Status (Menghilangkan double profil) --}}
-    <div class="px-4 py-3.5 border-t border-white/10 text-white/50 text-[11px] font-mono flex items-center justify-between">
-        <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span class="text-white/70">WBI Aset</span>
-        </div>
-        <span class="text-white/40">v1.0</span>
-    </div>
 </aside>

@@ -4,7 +4,7 @@
 @section('page-title', 'Master Pengguna')
 
 @section('content')
-<div class="max-w-6xl mx-auto space-y-5">
+<div class="max-w-6xl mx-auto space-y-5 w-full min-w-0">
     {{-- Header Bar --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -25,7 +25,7 @@
     {{-- Table Card --}}
     <div class="bg-surface-white rounded-xl border border-border-light overflow-hidden shadow-xs">
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
+            <table class="w-full text-left text-sm min-w-[600px]">
                 <thead>
                     <tr class="bg-surface-container/60 border-b border-border-light text-[11px] font-mono font-semibold text-on-surface-variant uppercase tracking-wider">
                         <th class="px-5 py-3.5">Nama Pengguna</th>

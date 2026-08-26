@@ -41,20 +41,18 @@
         {{-- Official Sheet (Paper Style) --}}
         <div class="bg-white p-8 sm:p-12 rounded-xl border border-stone-200 shadow-sm space-y-6 text-xs sm:text-sm leading-relaxed">
             {{-- Kop Surat Resmi --}}
-            <div class="flex items-center justify-between pb-6 border-b-2 border-stone-800">
+            <div class="flex items-center justify-between pb-6 border-b-2 border-stone-800 gap-4">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-lg bg-[#002a22] text-white flex items-center justify-center font-bold text-xl tracking-wider">
-                        WBI
-                    </div>
-                    <div>
-                        <h1 class="font-bold text-base sm:text-lg text-stone-900 tracking-tight">POLITEKNIK WILMAR BISNIS INDONESIA</h1>
-                        <p class="text-xs text-stone-600">Biro Pengelolaan Aset, Keuangan &amp; Logistik Terpadu</p>
-                        <p class="text-[10px] text-stone-500">Jl. Kapten Batu Sihombing, Medan Estate, Kec. Percut Sei Tuan, Deli Serdang</p>
+                    <img src="{{ asset('images/logo.png') }}" alt="Wilmar Business Indonesia Polytechnic" class="h-14 sm:h-16 w-auto object-contain shrink-0">
+                    <div class="border-l border-stone-300 pl-4">
+                        <h1 class="font-bold text-base sm:text-lg text-stone-900 tracking-tight leading-tight">POLITEKNIK WILMAR BISNIS INDONESIA</h1>
+                        <p class="text-xs text-stone-700 font-medium">Biro Pengelolaan Aset, Keuangan &amp; Logistik Terpadu</p>
+                        <p class="text-[10px] text-stone-500 mt-0.5">Jl. Kapten Batu Sihombing, Medan Estate, Kec. Percut Sei Tuan, Deli Serdang, Sumatera Utara 20371</p>
                     </div>
                 </div>
-                <div class="text-right font-mono text-[11px] text-stone-600">
+                <div class="text-right font-mono text-[11px] text-stone-600 shrink-0">
                     <p class="font-bold text-stone-900 text-xs">BERITA ACARA MUTASI</p>
-                    <p>{{ $mutation->form_number }}</p>
+                    <p class="font-bold text-primary">{{ $mutation->form_number }}</p>
                     <p class="text-[10px] text-emerald-800 font-bold uppercase mt-1">{{ $mutation->status === 'archived' ? 'TERCATAT & SAH' : 'PROSES PERSETUJUAN' }}</p>
                 </div>
             </div>

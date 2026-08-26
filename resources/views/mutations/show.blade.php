@@ -168,7 +168,7 @@
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs sm:text-sm">
+                    <table class="w-full text-left text-xs sm:text-sm min-w-[450px]">
                         <thead>
                             <tr class="bg-surface-container/50 border-b border-border-light text-[11px] font-mono font-semibold text-on-surface-variant uppercase">
                                 <th class="px-5 py-3">Aset &amp; Kode</th>
