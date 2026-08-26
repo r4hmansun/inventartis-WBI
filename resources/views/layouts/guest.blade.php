@@ -16,6 +16,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-neutral-bg font-body text-on-surface min-h-screen flex items-center justify-center">
+    {{-- Preloader & Page Loading System --}}
+    @include('components.preloader')
+
     <div class="w-full max-w-md px-4">
         @yield('content')
     </div>

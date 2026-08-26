@@ -16,6 +16,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-neutral-bg font-body text-on-surface min-h-screen overflow-x-hidden">
+    {{-- Preloader & Page Loading System --}}
+    @include('components.preloader')
+
     <div class="flex min-h-screen w-full max-w-full overflow-x-hidden">
         {{-- Sidebar --}}
         @include('components.sidebar')

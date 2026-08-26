@@ -53,103 +53,103 @@
             $mutationsUrl = '/mutations';
         }
 
-        // 4. Konfigurasi komprehensif untuk setiap kode status sesuai DESIGN.md
+        // 4. Konfigurasi ramah manusia (Super mudah dipahami siapa saja) sesuai DESIGN.md
         $errorConfigs = [
             400 => [
                 'code'        => 400,
-                'tag'         => 'ERR_BAD_REQUEST',
-                'title'       => 'Permintaan Tidak Valid',
-                'subtitle'    => 'Format atau parameter data yang dikirimkan tidak dapat diproses oleh sistem.',
+                'tag'         => 'PERMINTAAN KELIRU',
+                'title'       => 'Ups! Ada Data yang Kurang Pas',
+                'subtitle'    => 'Sistem belum bisa memproses permintaan ini karena ada format atau isian data yang belum sesuai.',
                 'theme'       => 'amber',
                 'accent_bar'  => '#D97706',
                 'icon_bg'     => '#FEF3C7',
                 'icon_color'  => '#B45309',
-                'solution'    => 'Periksa kembali formulir atau data yang Anda masukkan sebelum mengirim ulang.',
+                'solution'    => 'Pastikan semua isian formulir sudah diisi dengan benar, lalu coba kirim kembali.',
                 'can_reload'  => true,
             ],
             401 => [
                 'code'        => 401,
-                'tag'         => 'ERR_UNAUTHORIZED',
-                'title'       => 'Autentikasi Diperlukan',
-                'subtitle'    => 'Sesi Anda belum teridentifikasi. Anda harus masuk ke sistem untuk mengakses halaman ini.',
+                'tag'         => 'BELUM LOGIN',
+                'title'       => 'Silakan Masuk ke Akun Dulu',
+                'subtitle'    => 'Biar sistem tahu ini kamu, yuk masuk (login) menggunakan akun WBI kamu terlebih dahulu.',
                 'theme'       => 'teal',
                 'accent_bar'  => '#002a22',
                 'icon_bg'     => '#bdecde',
                 'icon_color'  => '#002a22',
-                'solution'    => 'Silakan masuk dengan akun pegawai atau administrator WBI Anda.',
+                'solution'    => 'Klik tombol "Masuk ke Akun" di bawah, lalu masukkan email dan password kamu.',
                 'is_auth'     => true,
             ],
             403 => [
                 'code'        => 403,
-                'tag'         => 'ERR_FORBIDDEN_ACCESS',
-                'title'       => 'Akses Dibatasi',
-                'subtitle'    => 'Akun Anda tidak memiliki izin role yang cukup untuk membuka fitur atau data ini.',
+                'tag'         => 'AKSES TERKUNCI',
+                'title'       => 'Waduh! Kamu Belum Punya Izin Akses',
+                'subtitle'    => 'Halaman ini dikunci khusus untuk bagian tertentu. Akun kamu saat ini belum memiliki izin untuk membukanya.',
                 'theme'       => 'amber',
                 'accent_bar'  => '#D97706',
                 'icon_bg'     => '#FEF3C7',
                 'icon_color'  => '#B45309',
-                'solution'    => 'Jika Anda memerlukan akses ke modul ini, silakan hubungi Tim IT Administrator WBI.',
+                'solution'    => 'Jika kamu memang butuh membuka halaman ini untuk tugas kerja, silakan hubungi tim Admin / IT WBI ya.',
                 'show_roles'  => true,
             ],
             404 => [
                 'code'        => 404,
-                'tag'         => 'ERR_PAGE_NOT_FOUND',
-                'title'       => 'Halaman Tidak Ditemukan',
-                'subtitle'    => 'Halaman atau data aset yang Anda cari tidak tersedia, telah dihapus, atau tautan salah.',
+                'tag'         => 'HALAMAN TIDAK ADA',
+                'title'       => 'Ups! Halaman Tidak Ditemukan',
+                'subtitle'    => 'Halaman atau barang/aset yang kamu cari tidak ada di sini. Mungkin salah ketik alamatnya atau sudah dipindahkan.',
                 'theme'       => 'slate',
                 'accent_bar'  => '#537E83',
                 'icon_bg'     => '#E6F0F0',
                 'icon_color'  => '#2A5257',
-                'solution'    => 'Periksa kembali ejaan URL atau gunakan menu navigasi untuk mencari data yang diinginkan.',
+                'solution'    => 'Coba periksa lagi alamat webnya, atau klik tombol "Ke Dashboard" di bawah untuk mencari menu yang kamu inginkan.',
                 'can_search'  => true,
             ],
             419 => [
                 'code'        => 419,
-                'tag'         => 'ERR_CSRF_TOKEN_EXPIRED',
-                'title'       => 'Sesi Formulir Kedaluwarsa',
-                'subtitle'    => 'Sesi keamanan Anda telah berakhir karena tidak ada aktivitas interaksi dalam waktu tertentu.',
+                'tag'         => 'SESI HABIS',
+                'title'       => 'Sesi Formulir Sudah Habis',
+                'subtitle'    => 'Karena halaman ini didiamkan terlalu lama tanpa aktivitas, sistem menguncinya demi keamanan data kamu.',
                 'theme'       => 'gold',
                 'accent_bar'  => '#805600',
                 'icon_bg'     => '#ffddaf',
                 'icon_color'  => '#775000',
-                'solution'    => 'Muat ulang halaman ini untuk memperbarui token keamanan, lalu coba kirim kembali.',
+                'solution'    => 'Gampang kok! Tinggal klik tombol "Muat Ulang" di bawah, lalu kamu bisa mengisi atau mengirim formulirnya lagi.',
                 'can_reload'  => true,
             ],
             429 => [
                 'code'        => 429,
-                'tag'         => 'ERR_TOO_MANY_REQUESTS',
-                'title'       => 'Terlalu Banyak Permintaan',
-                'subtitle'    => 'Sistem mendeteksi aktivitas yang terlalu cepat dalam rentang waktu singkat (Rate Limited).',
+                'tag'         => 'TERLALU CEPAT',
+                'title'       => 'Santai Sejenak, Jangan Buru-buru',
+                'subtitle'    => 'Kamu menekan tombol atau membuka halaman terlalu cepat berturut-turut. Sistem butuh istirahat sebentar.',
                 'theme'       => 'amber',
                 'accent_bar'  => '#D97706',
                 'icon_bg'     => '#FEF3C7',
                 'icon_color'  => '#B45309',
-                'solution'    => 'Mohon istirahat sejenak selama beberapa detik sebelum menekan tombol kembali.',
+                'solution'    => 'Tunggu sekitar 5–10 detik, lalu klik tombol "Muat Ulang" secara perlahan ya.',
                 'can_reload'  => true,
             ],
             500 => [
                 'code'        => 500,
-                'tag'         => 'ERR_INTERNAL_SERVER',
-                'title'       => 'Terjadi Kesalahan Server',
-                'subtitle'    => 'Sistem mengalami kendala saat memproses permintaan. Tim IT WBI sedang menindaklanjuti hal ini.',
+                'tag'         => 'SISTEM TERKENDALA',
+                'title'       => 'Aduh! Terjadi Gangguan di Sistem',
+                'subtitle'    => 'Ada sedikit kendala teknis di dalam server kami. Jangan khawatir, data kamu tetap aman dan sistem sedang kami tangani.',
                 'theme'       => 'red',
                 'accent_bar'  => '#991B1B',
                 'icon_bg'     => '#FEE2E2',
                 'icon_color'  => '#991B1B',
-                'solution'    => 'Salin kode referensi error di bawah dan laporkan kepada staf IT Helpdesk.',
+                'solution'    => 'Coba muat ulang halaman ini. Jika masih terkendala, klik "Salin Info Error" lalu kirimkan ke tim IT Support.',
                 'is_server'   => true,
                 'can_reload'  => true,
             ],
             503 => [
                 'code'        => 503,
-                'tag'         => 'ERR_SERVICE_MAINTENANCE',
-                'title'       => 'Layanan Sedang Pemeliharaan',
-                'subtitle'    => 'Sistem Manajemen Inventaris WBI sedang menjalani pemeliharaan berkala untuk peningkatan performa.',
+                'tag'         => 'SEDANG DIPERBAIKI',
+                'title'       => 'Sistem Sedang Pemeliharaan Berkala',
+                'subtitle'    => 'Kami sedang merawat dan meningkatkan sistem inventaris WBI agar semakin cepat dan nyaman saat kamu pakai.',
                 'theme'       => 'slate',
                 'accent_bar'  => '#537E83',
                 'icon_bg'     => '#E6F0F0',
                 'icon_color'  => '#2A5257',
-                'solution'    => 'Layanan akan segera aktif kembali dalam waktu dekat. Terima kasih atas kesabaran Anda.',
+                'solution'    => 'Pemeliharaan ini biasanya hanya sebentar. Silakan kembali lagi beberapa saat lagi ya!',
                 'can_reload'  => true,
             ],
         ];
@@ -157,19 +157,19 @@
         // Konfigurasi aktif berdasarkan kode status (dengan fallback pintar)
         $cfg = $errorConfigs[$code] ?? [
             'code'        => $code,
-            'tag'         => 'ERR_HTTP_' . $code,
-            'title'       => 'Kendala Sistem (' . $code . ')',
-            'subtitle'    => 'Terjadi kesalahan saat memproses permintaan Anda ke server.',
+            'tag'         => 'KENDALA SISTEM',
+            'title'       => 'Ups! Terjadi Kendala (' . $code . ')',
+            'subtitle'    => 'Permintaan kamu belum bisa diproses oleh server saat ini.',
             'theme'       => ($code >= 500 ? 'red' : 'amber'),
             'accent_bar'  => ($code >= 500 ? '#991B1B' : '#805600'),
             'icon_bg'     => '#F3F4F6',
             'icon_color'  => '#374151',
-            'solution'    => 'Silakan kembali ke dashboard utama atau muat ulang halaman.',
+            'solution'    => 'Silakan klik tombol "Ke Dashboard" atau "Kembali" untuk melanjutkan aktivitas kamu.',
             'can_reload'  => true,
         ];
 
-        // Gunakan pesan kustom bila tersedia
-        $displayTitle = $customMessage && strlen($customMessage) < 60 ? $customMessage : $cfg['title'];
+        // Judul selalu bersih dan ramah manusia (jangan tampilkan teks mentah exception kodingan seperti ModelNotFound)
+        $displayTitle = $cfg['title'];
         $displaySubtitle = $cfg['subtitle'];
 
         // Metadata diagnostik untuk pelaporan
@@ -540,14 +540,14 @@
                             {{ $displaySubtitle }}
                         </p>
 
-                        <!-- Practical Guidance Alert Box -->
+                        <!-- Practical Guidance Alert Box (Bahasa Ramah Pengguna) -->
                         <div class="p-3.5 rounded-lg bg-surface-container/80 border border-border-light text-xs text-on-surface-variant mb-6 flex items-start gap-2.5">
                             <svg class="w-4 h-4 text-primary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             <div>
                                 <span class="font-semibold text-on-surface">Saran Penanganan:</span>
-                                <span class="ml-1">{{ $cfg['solution'] }}</span>
+                                <span class="ml-1 leading-relaxed">{{ $cfg['solution'] }}</span>
                             </div>
                         </div>
 
