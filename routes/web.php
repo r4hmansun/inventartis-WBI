@@ -70,3 +70,13 @@ Route::middleware('auth')->group(function () {
         Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     });
 });
+
+/*
+|--------------------------------------------------------------------------
+| Error Pages Preview (Development & Testing)
+|--------------------------------------------------------------------------
+*/
+Route::get('/errors/{code}', function ($code) {
+    $code = (int) $code;
+    return response()->view('errors.layout', ['code' => $code], $code >= 400 && $code < 600 ? $code : 200);
+})->name('errors.preview');
