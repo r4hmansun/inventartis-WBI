@@ -67,7 +67,7 @@ class MutationController extends Controller
             });
         }
 
-        $mutations = $query->latest()->paginate(10)->withQueryString();
+        $mutations = $query->latest()->paginate(10)->onEachSide(1)->withQueryString();
 
         // Calculate quick badge counts
         $countQuery = MutationForm::query();

@@ -43,7 +43,7 @@ class AssetController extends Controller
             $query->where('current_department_id', $user->department_id);
         }
 
-        $assets = $query->latest()->paginate(15)->withQueryString();
+        $assets = $query->latest()->paginate(10)->onEachSide(1)->withQueryString();
         $departments = Department::active()->orderBy('name')->get();
 
         // Department-specific count if user belongs to one

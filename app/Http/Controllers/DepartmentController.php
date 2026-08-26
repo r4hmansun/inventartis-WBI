@@ -15,6 +15,7 @@ class DepartmentController extends Controller
         $departments = Department::withCount('users', 'assets')
             ->orderBy('name')
             ->paginate(10)
+            ->onEachSide(1)
             ->withQueryString();
 
         return view('departments.index', compact('departments'));

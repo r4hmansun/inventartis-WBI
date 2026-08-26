@@ -17,6 +17,7 @@ class UserController extends Controller
         $users = User::with('department')
             ->orderBy('name')
             ->paginate(10)
+            ->onEachSide(1)
             ->withQueryString();
 
         return view('users.index', compact('users'));
