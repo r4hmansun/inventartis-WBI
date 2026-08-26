@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar Aset & Inventaris')
-@section('page-title', 'Daftar Aset & Inventaris')
+@section('title', 'Daftar Aset')
+@section('page-title', 'Daftar Aset')
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-5 w-full min-w-0">
     {{-- Header --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h2 class="font-display text-xl sm:text-2xl font-bold text-on-surface">Daftar Aset &amp; Inventaris</h2>
+            <h2 class="font-display text-xl sm:text-2xl font-bold text-on-surface">Daftar Aset</h2>
             <p class="text-xs sm:text-sm text-on-surface-variant mt-0.5">
-                Pencatatan resmi barang inventaris terkapitalisasi (&ge; Rp 500.000) di seluruh lingkungan WBI.
+                Pencatatan resmi barang inventaris di seluruh lingkungan WBI.
             </p>
         </div>
         @if(auth()->user()->hasRole('finance', 'admin'))

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Terbitkan Formulir Mutasi Aset')
-@section('page-title', 'Formulir Mutasi Aset')
+@section('title', 'Ajukan Mutasi')
+@section('page-title', 'Ajukan Mutasi')
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
@@ -62,7 +62,7 @@
                                 class="w-full mt-1 px-3 py-2 rounded-md border border-outline-variant bg-surface-white text-on-surface text-xs sm:text-sm font-semibold focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20">
                             @foreach($allDepartments as $dept)
                                 <option value="{{ $dept->id }}" {{ $fromDepartment->id == $dept->id ? 'selected' : '' }}>
-                                    {{ $dept->name }} ({{ $dept->code }}) — {{ $dept->assets_count }} unit aset
+                                    {{ $dept->name }} ({{ $dept->code }}) | {{ $dept->assets_count }} unit aset
                                 </option>
                             @endforeach
                         </select>

@@ -75,7 +75,7 @@
                     <select id="department_id" name="department_id"
                             class="w-full px-4 py-2.5 rounded-md border border-outline-variant bg-surface-white text-on-surface text-sm
                                    focus:outline-none focus:border-primary-light focus:ring-2 focus:ring-primary-light/20 transition-colors">
-                        <option value="">— Pilih Departemen —</option>
+                        <option value="">Pilih Departemen</option>
                         @foreach($departments as $dept)
                             <option value="{{ $dept->id }}" {{ old('department_id', $user->department_id) == $dept->id ? 'selected' : '' }}>
                                 {{ $dept->name }} ({{ $dept->code }})

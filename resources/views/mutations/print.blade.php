@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAST Mutasi Aset — {{ $mutation->form_number }}</title>
+    <title>BAST Mutasi Aset | {{ $mutation->form_number }}</title>
     @vite(['resources/css/app.css'])
     <style>
         @page {

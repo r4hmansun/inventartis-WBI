@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Formulir Mutasi ' . $mutation->form_number)
-@section('page-title', 'Detail Mutasi Aset')
+@section('title', 'Detail Mutasi')
+@section('page-title', 'Detail Mutasi')
 
 @section('content')
 <div class="max-w-6xl mx-auto space-y-6">

@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('title', 'Pengguna')
-@section('page-title', 'Master Pengguna')
+@section('page-title', 'Pengguna')
 
 @section('content')
 <div class="max-w-6xl mx-auto space-y-5 w-full min-w-0">
     {{-- Header Bar --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h2 class="font-display text-xl sm:text-2xl font-bold text-on-surface">Daftar Pengguna</h2>
+            <h2 class="font-display text-xl sm:text-2xl font-bold text-on-surface">Pengguna</h2>
             <p class="text-xs sm:text-sm text-on-surface-variant mt-0.5">
                 Kelola akun pengguna, penugasan departemen, dan hak akses sistem.
             </p>
@@ -26,7 +26,7 @@
             <svg class="w-4 h-4 text-on-surface-variant/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            <span>Mode Lihat (Admin) — Perubahan data dikelola Super Admin</span>
+            <span>Mode Lihat (Admin): Perubahan data dikelola Super Admin</span>
         </div>
         @endif
     </div>

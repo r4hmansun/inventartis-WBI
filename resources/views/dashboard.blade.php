@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', auth()->user()->hasRole('user') ? 'Portal Inventaris Unit Anda' : 'Dashboard Eksekutif')
-@section('page-title', auth()->user()->hasRole('user') ? 'Portal Inventaris Unit Anda' : 'Ringkasan Eksekutif & Operasional')
+@section('title', 'Dashboard')
+@section('page-title', 'Dashboard')
 
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6 w-full min-w-0">
@@ -270,7 +270,7 @@
                     </span>
                 </div>
                 <h2 class="font-display text-xl sm:text-2xl font-bold text-on-surface">
-                    Ringkasan Eksekutif &amp; Operasional
+                    Ringkasan Inventaris
                 </h2>
                 <p class="text-xs text-on-surface-variant mt-0.5">
                     Monitoring data aset, stok gudang, dan pergerakan mutasi antar-unit.

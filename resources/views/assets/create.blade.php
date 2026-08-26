@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Registrasi Aset Baru')
-@section('page-title', 'Registrasi Aset Baru')
+@section('title', 'Tambah Aset')
+@section('page-title', 'Tambah Aset')
 
 @section('content')
 <div class="max-w-2xl mx-auto">
@@ -10,9 +10,9 @@
         Kembali ke Daftar Aset
     </a>
 
-    <div class="bg-surface-white rounded-lg border border-border-light overflow-hidden">
-        <div class="px-6 py-4 border-b border-border-light status-bar-active">
-            <h2 class="font-display text-lg font-semibold text-on-surface">Registrasi Aset Inventaris</h2>
+    <div class="bg-surface-white rounded-lg border border-border-light overflow-hidden shadow-xs">
+        <div class="px-6 py-4 border-b border-border-light">
+            <h2 class="font-display text-lg font-semibold text-on-surface">Tambah Aset Baru</h2>
             <p class="text-sm text-on-surface-variant mt-0.5">
                 Aset baru akan otomatis masuk ke <span class="font-mono text-xs text-primary-light bg-primary-surface px-1.5 py-0.5 rounded">Gudang Inventaris</span>
             </p>

@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="Sistem Manajemen Inventaris & Mutasi Aset Terpadu — WBI">
+    <meta name="description" content="Sistem Manajemen Inventaris & Mutasi Aset WBI">
     <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <title>@hasSection('title')@yield('title') — @endif{{ config('app.name', 'Inventaris WBI') }}</title>
+    <title>@hasSection('title')@yield('title') | @endif{{ config('app.name', 'Inventaris WBI') }}</title>
 
     {{-- Google Fonts sesuai DESIGN.md --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">

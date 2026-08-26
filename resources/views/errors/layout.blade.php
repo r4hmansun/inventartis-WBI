@@ -118,7 +118,7 @@
     <meta name="csrf-token" content="{{ $csrfToken }}">
     @endif
     <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <title>{{ $code }} — {{ config('app.name', 'Inventaris WBI') }}</title>
+    <title>{{ $code }} | {{ config('app.name', 'Inventaris WBI') }}</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

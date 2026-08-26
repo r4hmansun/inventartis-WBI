@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', $asset->name . ' — Detail Aset')
-@section('page-title', 'Detail Informasi Aset')
+@section('title', 'Detail Aset')
+@section('page-title', 'Detail Aset')
 
 @section('content')
 <div class="max-w-5xl mx-auto space-y-6">

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Mutasi & Perpindahan Aset')
+@section('title', 'Mutasi Aset')
 @section('page-title', 'Mutasi Aset')
 
 @section('content')
@@ -8,7 +8,7 @@
     {{-- Header Bar --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h2 class="font-display text-xl sm:text-2xl font-bold text-on-surface">Mutasi &amp; Perpindahan Aset</h2>
+            <h2 class="font-display text-xl sm:text-2xl font-bold text-on-surface">Mutasi Aset</h2>
             <p class="text-xs sm:text-sm text-on-surface-variant mt-0.5">
                 Siklus persetujuan digital resmi pemindahan aset antar-departemen di lingkungan WBI.
             </p>
@@ -157,11 +157,11 @@
                         <td class="px-5 py-4">
                             <div class="flex items-center gap-1.5 text-xs font-medium text-on-surface">
                                 <span class="px-2 py-0.5 rounded bg-surface-container text-on-surface font-mono text-[11px]">
-                                    {{ $mutation->fromDepartment ? $mutation->fromDepartment->code : '—' }}
+                                    {{ $mutation->fromDepartment ? $mutation->fromDepartment->code : '-' }}
                                 </span>
                                 <span class="text-on-surface-variant font-mono">&rarr;</span>
                                 <span class="px-2 py-0.5 rounded bg-primary/10 text-primary-light font-mono font-semibold text-[11px]">
-                                    {{ $mutation->toDepartment ? $mutation->toDepartment->code : '—' }}
+                                    {{ $mutation->toDepartment ? $mutation->toDepartment->code : '-' }}
                                 </span>
                             </div>
                             <p class="text-[11px] text-on-surface-variant mt-1 truncate max-w-xs">

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Profil & Pengaturan Akun')
-@section('page-title', 'Pengaturan Akun')
+@section('title', 'Profil')
+@section('page-title', 'Profil')
 
 @section('content')
 <div class="max-w-6xl mx-auto space-y-6 w-full min-w-0">
