@@ -102,4 +102,22 @@
         </div>
         @endif
     </nav>
+
+    {{-- Sidebar Footer / Profile Link --}}
+    <div class="p-3 border-t border-white/10 mt-auto">
+        <a href="{{ route('profile.index') }}" 
+           class="w-full flex items-center gap-3 p-2 rounded-lg {{ request()->routeIs('profile.*') ? 'bg-white/15 text-white' : 'bg-white/5 hover:bg-white/10 text-white' }} text-left transition-colors cursor-pointer group"
+           title="Buka Profil &amp; Ganti Password">
+            <div class="w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-xs shrink-0 group-hover:bg-secondary-light group-hover:text-primary transition-colors">
+                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-xs font-semibold text-white truncate group-hover:text-secondary-light transition-colors">{{ auth()->user()->name }}</p>
+                <p class="text-[10px] font-mono text-white/60 truncate">{{ auth()->user()->role_label }}</p>
+            </div>
+            <svg class="w-4 h-4 text-white/40 group-hover:text-white transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+        </a>
+    </div>
 </aside>

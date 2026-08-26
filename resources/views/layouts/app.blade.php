@@ -45,18 +45,30 @@
 
                 {{-- User Profile & Actions --}}
                 <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-3 pl-3 pr-2 py-1.5 rounded-full bg-surface-container/60 border border-border-light">
-                        <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-semibold shrink-0 shadow-2xs">
-                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                        </div>
-                        <div class="text-left hidden sm:block">
-                            <p class="text-xs font-semibold text-on-surface leading-tight">{{ auth()->user()->name }}</p>
-                            <p class="text-[10px] font-mono text-on-surface-variant leading-tight">{{ auth()->user()->role_label }}</p>
-                        </div>
+                    <div class="flex items-center gap-2 pl-1.5 pr-2 py-1 rounded-full bg-surface-container/60 border border-border-light hover:bg-surface-container/90 transition-colors {{ request()->routeIs('profile.*') ? 'ring-2 ring-primary/20 bg-surface-container' : '' }}">
+                        <a href="{{ route('profile.index') }}" 
+                           class="flex items-center gap-2.5 text-left focus:outline-none cursor-pointer group"
+                           title="Lihat Profil &amp; Ganti Password">
+                            <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-semibold shrink-0 shadow-2xs group-hover:ring-2 group-hover:ring-primary/20 transition-all">
+                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                            </div>
+                            <div class="text-left hidden sm:block pr-1">
+                                <p class="text-xs font-semibold text-on-surface leading-tight group-hover:text-primary transition-colors flex items-center gap-1">
+                                    <span>{{ auth()->user()->name }}</span>
+                                    <svg class="w-3 h-3 text-on-surface-variant group-hover:text-primary opacity-60 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </p>
+                                <p class="text-[10px] font-mono text-on-surface-variant leading-tight">{{ auth()->user()->role_label }}</p>
+                            </div>
+                        </a>
+
+                        <div class="h-4 w-px bg-border-light"></div>
+
                         <form method="POST" action="{{ route('logout') }}" class="inline-flex">
                             @csrf
                             <button type="submit"
-                                    class="p-1.5 rounded-full text-on-surface-variant hover:text-danger hover:bg-rose-50 transition-colors"
+                                    class="p-1.5 rounded-full text-on-surface-variant hover:text-danger hover:bg-rose-50 transition-colors cursor-pointer"
                                     title="Keluar / Logout"
                                     aria-label="Logout">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
