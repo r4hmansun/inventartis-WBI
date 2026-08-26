@@ -44,66 +44,52 @@
             $isRejected = $mutation->status === 'rejected';
         @endphp
         <div class="px-6 py-5 bg-surface-container/20 border-b border-border-light">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                 {{-- Step 1 --}}
-                <div class="p-3 rounded-lg border {{ $mutation->sender_signed_at ? 'border-emerald-300 bg-emerald-50/60' : 'border-border-light bg-surface-white' }}">
+                <div class="p-3.5 rounded-lg border {{ $mutation->sender_signed_at ? 'border-emerald-300 bg-emerald-50/60' : 'border-border-light bg-surface-white' }}">
                     <div class="flex items-center gap-1.5 text-emerald-800 font-bold text-[11px] mb-0.5">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                        1. Pengajuan
+                        1. Penerbitan Form
                     </div>
-                    <p class="font-semibold text-on-surface">Pihak Penyerah</p>
-                    <p class="text-[10px] text-on-surface-variant font-mono mt-0.5">Disetujui Digital</p>
+                    <p class="font-semibold text-on-surface">Bagian Penyerah</p>
+                    <p class="text-[10px] text-on-surface-variant font-mono mt-0.5">Disetujui via Approval Button</p>
                 </div>
 
                 {{-- Step 2 --}}
-                <div class="p-3 rounded-lg border {{ $mutation->receiver_signed_at ? 'border-emerald-300 bg-emerald-50/60' : ($isWaitingReceiver ? 'border-amber-400 bg-amber-50/70 ring-2 ring-amber-200' : ($isRejected ? 'border-rose-300 bg-rose-50' : 'border-border-light bg-surface-white')) }}">
+                <div class="p-3.5 rounded-lg border {{ $mutation->receiver_signed_at ? 'border-emerald-300 bg-emerald-50/60' : ($isWaitingReceiver ? 'border-amber-400 bg-amber-50/70 ring-2 ring-amber-200' : ($isRejected ? 'border-rose-300 bg-rose-50' : 'border-border-light bg-surface-white')) }}">
                     <div class="flex items-center gap-1.5 {{ $mutation->receiver_signed_at ? 'text-emerald-800' : ($isWaitingReceiver ? 'text-amber-800 font-bold' : ($isRejected ? 'text-rose-800' : 'text-on-surface-variant')) }} text-[11px] mb-0.5">
                         @if($mutation->receiver_signed_at)
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                         @elseif($isWaitingReceiver)
                             <span class="w-2 h-2 rounded-full bg-amber-600 animate-pulse"></span>
                         @endif
-                        2. Approval Unit
+                        2. Approval Penerima
                     </div>
-                    <p class="font-semibold text-on-surface">Pihak Penerima</p>
+                    <p class="font-semibold text-on-surface">Bagian Terkait / Penerima</p>
                     <p class="text-[10px] text-on-surface-variant font-mono mt-0.5">
                         @if($mutation->receiver_signed_at)
-                            Disetujui Digital
+                            Disetujui via Approval Button
                         @elseif($isRejected)
                             Ditolak
                         @else
-                            Menunggu Approval
+                            Menunggu Approval Penerima
                         @endif
                     </p>
                 </div>
 
                 {{-- Step 3 --}}
-                <div class="p-3 rounded-lg border {{ $isArchived ? 'border-emerald-300 bg-emerald-50/60' : ($isReady ? 'border-teal-400 bg-teal-50/70 ring-2 ring-teal-200' : 'border-border-light bg-surface-white') }}">
+                <div class="p-3.5 rounded-lg border {{ $isArchived ? 'border-emerald-300 bg-emerald-50/60' : ($isReady ? 'border-teal-400 bg-teal-50/70 ring-2 ring-teal-200' : 'border-border-light bg-surface-white') }}">
                     <div class="flex items-center gap-1.5 {{ $isArchived ? 'text-emerald-800' : ($isReady ? 'text-teal-900 font-bold' : 'text-on-surface-variant') }} text-[11px] mb-0.5">
                         @if($isArchived)
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                         @elseif($isReady)
                             <span class="w-2 h-2 rounded-full bg-teal-600 animate-pulse"></span>
                         @endif
-                        3. Eksekusi Mutasi
+                        3. Bagian Inventaris: Arsip Form
                     </div>
-                    <p class="font-semibold text-on-surface">Bagian Inventaris</p>
+                    <p class="font-semibold text-on-surface">Pemindahan Aset &amp; Arsip Form</p>
                     <p class="text-[10px] text-on-surface-variant font-mono mt-0.5">
-                        {{ $isArchived ? 'Selesai Dipindahkan' : ($isReady ? 'Siap Eksekusi' : 'Menunggu Approval') }}
-                    </p>
-                </div>
-
-                {{-- Step 4 --}}
-                <div class="p-3 rounded-lg border {{ $isArchived ? 'border-emerald-300 bg-emerald-50/60' : 'border-border-light bg-surface-white' }}">
-                    <div class="flex items-center gap-1.5 {{ $isArchived ? 'text-emerald-800 font-bold' : 'text-on-surface-variant' }} text-[11px] mb-0.5">
-                        @if($isArchived)
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                        @endif
-                        4. Arsip Dokumen
-                    </div>
-                    <p class="font-semibold text-on-surface">Berita Acara</p>
-                    <p class="text-[10px] text-on-surface-variant font-mono mt-0.5">
-                        {{ $isArchived ? 'Terkunci Permanen' : 'Draft Sistem' }}
+                        {{ $isArchived ? 'SELESAI (Form Diarsipkan)' : ($isReady ? 'Siap Eksekusi & Arsip' : 'Menunggu Approval Unit') }}
                     </p>
                 </div>
             </div>
@@ -321,37 +307,37 @@
             <div class="bg-surface-white rounded-xl border border-border-light p-5 shadow-xs space-y-3">
                 <div class="flex items-center justify-between">
                     <span class="text-[11px] font-mono font-bold uppercase tracking-wider {{ $isArchived ? 'text-emerald-800' : ($isReady ? 'text-primary-light' : 'text-on-surface-variant') }}">
-                        Eksekusi Bagian Inventaris
+                        3. Bagian Inventaris: Arsip Form
                     </span>
                     @if($isArchived)
                     <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                        Diarsipkan
+                        Diarsipkan (Selesai)
                     </span>
                     @elseif($isReady)
                     <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-primary-light bg-primary-surface px-2 py-0.5 rounded-full border border-teal-200">
-                        Siap Eksekusi
+                        Siap Arsip Form
                     </span>
                     @endif
                 </div>
 
                 @if($isArchived)
                 <div class="p-3.5 rounded-lg bg-surface-container/30 border border-border-light space-y-1 text-xs">
-                    <p class="text-on-surface font-semibold">Dieksekusi oleh: {{ $mutation->executor ? $mutation->executor->name : 'Bagian Inventaris' }}</p>
+                    <p class="text-on-surface font-semibold">Petugas: {{ $mutation->executor ? $mutation->executor->name : 'Bagian Inventaris' }}</p>
                     <p class="text-[11px] text-emerald-700 font-medium">
-                        Kepemilikan aset resmi telah berpindah ke {{ $mutation->toDepartment->name }}.
+                        ✓ Aset resmi dipindahkan ke {{ $mutation->toDepartment->name }} dan Formulir telah Diarsipkan (Selesai).
                     </p>
                     <p class="text-[10px] text-on-surface-variant font-mono pt-1 border-t border-border-light">
-                        Waktu Eksekusi: {{ $mutation->updated_at->format('d F Y, H:i') }} WIB
+                        Waktu Arsip: {{ $mutation->updated_at->format('d F Y, H:i') }} WIB
                     </p>
                 </div>
                 @elseif($canExecute)
                 {{-- Inventory Execution Action Box --}}
                 <div class="p-4 rounded-lg bg-teal-50/70 border border-teal-300 space-y-3">
                     <div>
-                        <h4 class="text-xs font-bold text-teal-950">Eksekusi Perpindahan &amp; Arsip Berita Acara</h4>
+                        <h4 class="text-xs font-bold text-teal-950">Pemindahan Aset &amp; Arsip Form</h4>
                         <p class="text-[11px] text-teal-800 mt-0.5 leading-relaxed">
-                            Kedua pihak (Penyerah &amp; Penerima) telah menyetujui mutasi ini. Klik tombol di bawah untuk memindahkan kepemilikan aset secara definitif di database dan mengunci arsip formulir.
+                            Pihak Penyerah &amp; Penerima telah menyetujui mutasi ini. Klik tombol di bawah untuk memindahkan aset dan mengarsipkan formulir secara permanen.
                         </p>
                     </div>
 
@@ -361,15 +347,15 @@
                                 onclick="confirmExecuteMutation()"
                                 class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary-light transition-all shadow-xs cursor-pointer">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            Eksekusi Pemindahan &amp; Arsipkan Mutasi
+                            Bagian Inventaris: Pindahkan Aset &amp; Arsip Form
                         </button>
                     </form>
                 </div>
                 @else
                 <div class="p-3.5 rounded-lg bg-stone-50 border border-stone-200 text-xs text-on-surface-variant space-y-1">
-                    <p class="font-semibold text-on-surface">Tahap Eksekusi Logistik</p>
+                    <p class="font-semibold text-on-surface">Tahap Terakhir: Arsip Form</p>
                     <p class="text-[11px]">
-                        Tombol eksekusi mutasi akan aktif bagi Bagian Inventaris setelah pihak penerima menyetujui formulir ini.
+                        Tombol Arsip Form akan aktif untuk Bagian Inventaris setelah persetujuan dari Bagian Terkait / Penerima selesai.
                     </p>
                 </div>
                 @endif
@@ -382,11 +368,11 @@
 function confirmExecuteMutation() {
     if (typeof window.WbiSwal !== 'undefined') {
         window.WbiSwal.fire({
-            title: 'Konfirmasi Eksekusi Mutasi',
+            title: 'Bagian Inventaris: Arsip Form',
             html: `
                 <div class="text-left space-y-3 pt-1">
                     <p class="text-xs text-on-surface-variant leading-relaxed">
-                        Apakah Anda yakin ingin mengeksekusi mutasi aset ini secara resmi?
+                        Sesuai flow SOP, apakah Bagian Inventaris akan memindahkan aset ke unit penerima dan melakukan <strong>ARSIP FORM</strong>?
                     </p>
                     <div class="p-3 rounded-lg bg-surface-container/60 border border-border-light space-y-1.5 text-xs font-mono">
                         <div class="flex justify-between">
@@ -407,13 +393,13 @@ function confirmExecuteMutation() {
                         </div>
                     </div>
                     <p class="text-[11px] text-on-surface-variant/80">
-                        Kepemilikan aset akan resmi berpindah dan dokumen Berita Acara (BAST) otomatis diarsipkan secara permanen.
+                        Kepemilikan aset resmi beralih ke unit penerima dan formulir ini otomatis berstatus <strong>ARSIP FORM (SELESAI)</strong>.
                     </p>
                 </div>
             `,
             icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Ya, Eksekusi Mutasi',
+            confirmButtonText: 'Ya, Pindahkan Aset & Arsip Form',
             cancelButtonText: 'Batal',
             reverseButtons: true,
             focusCancel: true,
