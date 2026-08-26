@@ -111,7 +111,7 @@
                     Pengadaan Barang Baru
                 </h3>
                 <p class="text-xs text-on-surface-variant leading-relaxed mb-3">
-                    Pembelian barang seharga <strong>&ge; Rp 500.000</strong> wajib dilaporkan ke Keuangan untuk penomoran kode aset resmi.
+                    Pembelian barang baru wajib dilaporkan ke Keuangan untuk penomoran kode aset resmi.
                 </p>
             </div>
             <button type="button" onclick="openGuideModal()"
@@ -166,7 +166,7 @@
                 </div>
             </div>
             <p class="text-[11px] text-on-surface-variant/70 mt-2">
-                Aturan WBI: Batas kapitalisasi aset &ge; Rp 500.000.
+                Aturan WBI: Pencatatan inventaris resmi.
             </p>
         </div>
     </div>
@@ -244,7 +244,7 @@
                                 </div>
                                 <h4 class="text-sm font-bold text-on-surface">Belum Ada Inventaris Terdaftar</h4>
                                 <p class="text-xs text-on-surface-variant leading-relaxed">
-                                    Jika unit Anda baru saja membeli barang seharga &ge; Rp 500.000, silakan hubungi Bagian Keuangan untuk pencatatan kode inventaris resmi.
+                                    Jika unit Anda baru saja membeli barang baru, silakan hubungi Bagian Keuangan untuk pencatatan kode inventaris resmi.
                                 </p>
                             </div>
                         </td>
@@ -268,15 +268,12 @@
                     <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase tracking-wider bg-primary text-white">
                         WBI Inventaris
                     </span>
-                    <span class="text-xs font-mono text-on-surface-variant">
-                        Tahun Anggaran {{ date('Y') }} &bull; Sem. {{ date('n') <= 6 ? 'I' : 'II' }}
-                    </span>
                 </div>
                 <h2 class="font-display text-xl sm:text-2xl font-bold text-on-surface">
                     Ringkasan Eksekutif &amp; Operasional
                 </h2>
                 <p class="text-xs text-on-surface-variant mt-0.5">
-                    Monitoring kapitalisasi aset (&ge; Rp 500.000), stok gudang, dan pergerakan mutasi antar-unit.
+                    Monitoring data aset, stok gudang, dan pergerakan mutasi antar-unit.
                 </p>
             </div>
 
@@ -318,7 +315,7 @@
             'title' => 'Total Aset Terdata',
             'value' => number_format($stats['total_assets']),
             'unit' => 'Unit',
-            'badge' => 'Terkapitalisasi',
+            'badge' => 'Terdaftar',
             'badgeType' => 'teal',
             'subvalue' => 'Nilai: <strong class="text-on-surface font-mono">Rp ' . number_format($stats['total_valuation'], 0, ',', '.') . '</strong>',
             'icon' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>'
@@ -465,7 +462,7 @@
                     <div class="flex items-center justify-between gap-2 mb-3">
                         <div>
                             <h4 class="font-display text-sm font-bold text-on-surface">Valuasi Aset per Unit Kerja</h4>
-                            <p class="text-xs text-on-surface-variant mt-0.5">Akumulasi harga perolehan barang (&ge; Rp 500.000) per unit.</p>
+                            <p class="text-xs text-on-surface-variant mt-0.5">Akumulasi harga perolehan barang per unit.</p>
                         </div>
                         <span class="text-[11px] font-mono px-2.5 py-1 rounded-md bg-surface-container text-primary font-bold whitespace-nowrap">
                             Rupiah (IDR)
@@ -612,7 +609,7 @@
                                         </div>
                                         <p class="text-xs font-semibold text-on-surface">Belum Ada Aset Terdaftar</p>
                                         <p class="text-[11px] text-on-surface-variant">
-                                            Aset yang dicatat oleh Bagian Keuangan (nilai &ge; Rp 500.000) akan tampil di sini.
+                                            Aset yang dicatat oleh Bagian Keuangan akan tampil di sini.
                                         </p>
                                     </div>
                                 </td>
@@ -624,7 +621,7 @@
             </div>
 
             <div class="px-4 py-2.5 bg-surface-container/30 border-t border-border-light text-[11px] font-mono text-on-surface-variant flex items-center justify-between">
-                <span>Ambang Batas Kapitalisasi: &ge; Rp 500.000</span>
+                <span>Sistem Inventaris Politeknik WBI</span>
                 <span>Standar: AST/[DEPT]/[MM]/[YYYY]/[NO]</span>
             </div>
         </div>
