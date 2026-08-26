@@ -19,10 +19,21 @@ class DatabaseSeeder extends Seeder
         // Create default Super Admin user
         $adminDept = Department::where('code', 'IT')->first();
 
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'admin@wbi.co.id'],
             [
                 'name' => 'Super Admin',
+                'password' => 'password',
+                'department_id' => $adminDept?->id,
+                'role' => 'super_admin',
+            ]
+        );
+
+        // Create default Admin (Admin Biasa) user
+        User::firstOrCreate(
+            ['email' => 'admin.biasa@wbi.co.id'],
+            [
+                'name' => 'Admin Operasional',
                 'password' => 'password',
                 'department_id' => $adminDept?->id,
                 'role' => 'admin',

@@ -73,11 +73,27 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user has admin role.
+     * Check if user is Super Admin (has full master & role editing permissions).
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin';
+    }
+
+    /**
+     * Check if user has admin privileges (Super Admin or regular Admin).
      */
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->role === 'admin' || $this->role === 'super_admin';
+    }
+
+    /**
+     * Check if user can edit/modify other users and their roles.
+     */
+    public function canEditUsers(): bool
+    {
+        return $this->isSuperAdmin();
     }
 
     /**
@@ -101,6 +117,10 @@ class User extends Authenticatable
      */
     public function hasRole(string ...$roles): bool
     {
+        if (in_array('admin', $roles) && ($this->role === 'admin' || $this->role === 'super_admin')) {
+            return true;
+        }
+
         return in_array($this->role, $roles);
     }
 
@@ -110,7 +130,8 @@ class User extends Authenticatable
     public function getRoleLabelAttribute(): string
     {
         return match ($this->role) {
-            'admin' => 'Super Admin',
+            'super_admin' => 'Super Admin',
+            'admin' => 'Admin',
             'finance' => 'Bagian Keuangan',
             'inventory' => 'Bagian Inventaris',
             'user' => 'User / Departemen',

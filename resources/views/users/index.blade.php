@@ -13,6 +13,7 @@
                 Kelola akun pengguna, penugasan departemen, dan hak akses sistem.
             </p>
         </div>
+        @if(auth()->user()->isSuperAdmin())
         <a href="{{ route('users.create') }}"
            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-white text-xs sm:text-sm font-semibold hover:bg-primary-light transition-all active:scale-[0.98] shadow-xs self-start sm:self-auto">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -20,6 +21,14 @@
             </svg>
             Tambah Pengguna
         </a>
+        @else
+        <div class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container border border-border-light text-xs font-mono text-on-surface-variant self-start sm:self-auto">
+            <svg class="w-4 h-4 text-on-surface-variant/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>Mode Lihat (Admin) — Perubahan data dikelola Super Admin</span>
+        </div>
+        @endif
     </div>
 
     {{-- Table Card --}}
@@ -53,16 +62,17 @@
                                     {{ $u->department->name }}
                                 </span>
                             @else
-                                <span class="text-on-surface-variant/50 font-mono">—</span>
+                                <span class="text-on-surface-variant/50 font-mono italic">Global / Kampus</span>
                             @endif
                         </td>
                         <td class="px-5 py-3.5 whitespace-nowrap">
                             @php
                                 $roleConfig = [
-                                    'admin' => ['bg' => 'bg-purple-50', 'text' => 'text-purple-800', 'border' => 'border-purple-200', 'dot' => 'bg-purple-500'],
-                                    'finance' => ['bg' => 'bg-blue-50', 'text' => 'text-blue-800', 'border' => 'border-blue-200', 'dot' => 'bg-blue-500'],
-                                    'inventory' => ['bg' => 'bg-emerald-50', 'text' => 'text-emerald-800', 'border' => 'border-emerald-200', 'dot' => 'bg-emerald-500'],
-                                    'user' => ['bg' => 'bg-stone-100', 'text' => 'text-stone-700', 'border' => 'border-stone-300', 'dot' => 'bg-stone-400'],
+                                    'super_admin' => ['bg' => 'bg-emerald-50', 'text' => 'text-success', 'border' => 'border-emerald-200', 'dot' => 'bg-success'],
+                                    'admin' => ['bg' => 'bg-purple-50', 'text' => 'text-purple-800', 'border' => 'border-purple-200', 'dot' => 'bg-purple-600'],
+                                    'finance' => ['bg' => 'bg-amber-50', 'text' => 'text-secondary', 'border' => 'border-amber-200', 'dot' => 'bg-secondary'],
+                                    'inventory' => ['bg' => 'bg-teal-50', 'text' => 'text-primary-light', 'border' => 'border-teal-200', 'dot' => 'bg-primary-light'],
+                                    'user' => ['bg' => 'bg-surface-container', 'text' => 'text-on-surface-variant', 'border' => 'border-outline-variant', 'dot' => 'bg-outline'],
                                 ];
                                 $c = $roleConfig[$u->role] ?? $roleConfig['user'];
                             @endphp
@@ -72,6 +82,7 @@
                             </span>
                         </td>
                         <td class="px-5 py-3.5 text-right whitespace-nowrap">
+                            @if(auth()->user()->isSuperAdmin())
                             <a href="{{ route('users.edit', $u) }}"
                                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border-light bg-surface-white text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors shadow-2xs">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,6 +90,14 @@
                                 </svg>
                                 Edit
                             </a>
+                            @else
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-mono text-on-surface-variant/70 bg-surface-container/50 border border-border-light/60" title="Hanya Super Admin yang dapat mengedit data pengguna">
+                                <svg class="w-3.5 h-3.5 text-on-surface-variant/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                                <span>Terkunci</span>
+                            </span>
+                            @endif
                         </td>
                     </tr>
                     @empty
@@ -101,9 +120,9 @@
 
         {{-- Pagination --}}
         @if($users->hasPages())
-        <div class="px-5 py-3.5 border-t border-border-light bg-surface-white">
-            {{ $users->links() }}
-        </div>
+            <div class="px-5 py-3 border-t border-border-light bg-surface-container/30">
+                {{ $users->links() }}
+            </div>
         @endif
     </div>
 </div>

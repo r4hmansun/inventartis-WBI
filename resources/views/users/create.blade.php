@@ -94,11 +94,21 @@
                                    focus:outline-none focus:border-primary-light focus:ring-2 focus:ring-primary-light/20 transition-colors
                                    @error('role') border-error @enderror">
                         @php
-                            $roleLabels = ['user' => 'User / Departemen', 'finance' => 'Bagian Keuangan', 'inventory' => 'Bagian Inventaris', 'admin' => 'Super Admin'];
+                            $roleLabels = [
+                                'super_admin' => 'Super Admin (Kelola Role & Semua Data Pengguna)',
+                                'admin' => 'Admin (Admin Biasa - Kelola Master & Inventaris)',
+                                'finance' => 'Bagian Keuangan',
+                                'inventory' => 'Bagian Inventaris',
+                                'user' => 'User / Staf Departemen',
+                            ];
                         @endphp
-                        @foreach($roles as $role)
-                            <option value="{{ $role }}" {{ old('role') == $role ? 'selected' : '' }}>
-                                {{ $roleLabels[$role] ?? $role }}
+                        @foreach($roles as $roleKey => $roleLabel)
+                            @php
+                                $value = is_string($roleKey) ? $roleKey : $roleLabel;
+                                $label = is_string($roleKey) ? $roleLabel : ($roleLabels[$value] ?? $value);
+                            @endphp
+                            <option value="{{ $value }}" {{ old('role') == $value ? 'selected' : '' }}>
+                                {{ $label }}
                             </option>
                         @endforeach
                     </select>
@@ -106,6 +116,20 @@
                         <p class="mt-1 text-xs text-error">{{ $message }}</p>
                     @enderror
                 </div>
+            </div>
+
+            {{-- Info Perbedaan Role --}}
+            <div class="p-3.5 rounded-md bg-surface-container/50 border border-border-light text-xs text-on-surface-variant space-y-1.5 font-mono">
+                <div class="flex items-center gap-1.5 text-on-surface font-semibold">
+                    <svg class="w-4 h-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Hak Akses Administrator:</span>
+                </div>
+                <ul class="list-disc list-inside space-y-1 pl-1 text-[11px]">
+                    <li><strong class="text-on-surface">Super Admin:</strong> Memiliki wewenang penuh mengubah informasi profil, ganti role pengguna lain, dan kelola master data.</li>
+                    <li><strong class="text-on-surface">Admin Biasa:</strong> Memiliki akses master data & inventaris, namun <em>tidak dapat mengubah</em> data profil / role pengguna lain.</li>
+                </ul>
             </div>
 
             {{-- Actions --}}
