@@ -21,20 +21,20 @@ $badgeStyles = [
 $badgeClass = $badgeStyles[$badgeType] ?? $badgeStyles['neutral'];
 @endphp
 
-<div class="bg-surface-white rounded-xl border border-border-light p-4 sm:p-5 shadow-xs hover:border-slate-300 hover:shadow-sm transition-all duration-200 flex flex-col justify-between group">
+<div class="bg-surface-white rounded-2xl border border-border-light p-5 sm:p-6 shadow-xs hover:border-slate-300 hover:shadow-sm transition-all duration-200 flex flex-col justify-between group">
     <div>
         {{-- Card Header --}}
-        <div class="flex items-center justify-between gap-2 pb-2 mb-3 border-b border-border-light/60">
-            <div class="flex items-center gap-2">
+        <div class="flex items-center justify-between gap-2 pb-2 mb-3 border-b border-border-light">
+            <div class="flex items-center gap-2.5">
                 @if($icon)
-                <div class="w-6 h-6 rounded-md bg-surface-container border border-border-light/70 text-primary-light flex items-center justify-center shrink-0">
+                <div class="w-8 h-8 rounded-lg bg-surface-container text-primary-light flex items-center justify-center shrink-0">
                     {!! $icon !!}
                 </div>
                 @endif
-                <span class="text-xs font-semibold uppercase tracking-wider text-on-surface-variant font-sans">{{ $title }}</span>
+                <span class="text-xs sm:text-sm font-bold text-slate-700 font-sans tracking-wide uppercase">{{ $title }}</span>
             </div>
             @if($badge)
-            <span class="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-medium rounded border {{ $badgeClass }}">
+            <span class="inline-flex items-center px-2.5 py-1 text-xs font-mono font-semibold rounded-md border {{ $badgeClass }}">
                 {{ $badge }}
             </span>
             @endif
@@ -42,16 +42,16 @@ $badgeClass = $badgeStyles[$badgeType] ?? $badgeStyles['neutral'];
 
         {{-- Metric Display --}}
         <div class="flex items-baseline gap-2">
-            <span class="font-mono text-2xl sm:text-3xl font-bold text-on-surface tracking-tight">{{ $value }}</span>
+            <span class="font-mono text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">{{ $value }}</span>
             @if($unit)
-            <span class="text-xs font-mono font-semibold text-on-surface-variant uppercase">{{ $unit }}</span>
+            <span class="text-sm font-sans font-semibold text-slate-500">{{ $unit }}</span>
             @endif
         </div>
     </div>
 
     {{-- Context / Subvalue Footer --}}
     @if($subvalue || isset($footer))
-    <div class="mt-3 pt-2.5 border-t border-border-light/60 flex items-center justify-between text-xs text-on-surface-variant font-mono">
+    <div class="mt-4 pt-3 border-t border-border-light flex items-center justify-between text-xs sm:text-sm text-slate-600">
         @if($subvalue)
         <span class="truncate">{!! $subvalue !!}</span>
         @endif
@@ -61,4 +61,5 @@ $badgeClass = $badgeStyles[$badgeType] ?? $badgeStyles['neutral'];
     </div>
     @endif
 </div>
+
 

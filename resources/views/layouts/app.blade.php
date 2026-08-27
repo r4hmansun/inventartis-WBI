@@ -43,24 +43,50 @@
                     </div>
                 </div>
 
-                {{-- User Profile Link (Header) --}}
-                <div class="flex items-center gap-3">
-                    <a href="{{ route('profile.index') }}" 
-                       class="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-full bg-surface-container/60 border border-border-light hover:bg-surface-container/90 transition-colors group {{ request()->routeIs('profile.*') ? 'ring-2 ring-primary/20 bg-surface-container' : '' }}"
-                       title="Lihat Profil &amp; Ganti Password">
-                        <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-semibold shrink-0 shadow-2xs group-hover:ring-2 group-hover:ring-primary/20 transition-all">
-                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                        </div>
-                        <div class="text-left hidden sm:block">
-                            <p class="text-xs font-semibold text-on-surface leading-tight group-hover:text-primary transition-colors flex items-center gap-1">
-                                <span>{{ auth()->user()->name }}</span>
-                                <svg class="w-3 h-3 text-on-surface-variant group-hover:text-primary opacity-60 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                {{-- User Profile & Actions --}}
+                <div class="flex items-center gap-2.5">
+                    {{-- Global Guide Modal Trigger --}}
+                    <button type="button" onclick="openSystemGuideModal()"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border-light bg-surface-white text-xs font-semibold text-primary-light hover:text-primary hover:bg-surface-container transition-all shadow-2xs cursor-pointer"
+                            title="Buka Panduan Alur Kode Aset &amp; Mutasi">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                        <span class="hidden sm:inline">Panduan Alur</span>
+                    </button>
+
+                    <div class="flex items-center gap-2 pl-1.5 pr-2 py-1 rounded-full bg-surface-container/60 border border-border-light hover:bg-surface-container/90 transition-colors {{ request()->routeIs('profile.*') ? 'ring-2 ring-primary/20 bg-surface-container' : '' }}">
+                        <a href="{{ route('profile.index') }}" 
+                           class="flex items-center gap-2.5 text-left focus:outline-none cursor-pointer group"
+                           title="Lihat Profil &amp; Ganti Password">
+                            <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-semibold shrink-0 shadow-2xs group-hover:ring-2 group-hover:ring-primary/20 transition-all">
+                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                            </div>
+                            <div class="text-left hidden sm:block pr-1">
+                                <p class="text-xs font-semibold text-on-surface leading-tight group-hover:text-primary transition-colors flex items-center gap-1">
+                                    <span>{{ auth()->user()->name }}</span>
+                                    <svg class="w-3 h-3 text-on-surface-variant group-hover:text-primary opacity-60 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </p>
+                                <p class="text-[10px] font-mono text-on-surface-variant leading-tight">{{ auth()->user()->role_label }}</p>
+                            </div>
+                        </a>
+
+                        <div class="h-4 w-px bg-border-light"></div>
+
+                        <form method="POST" action="{{ route('logout') }}" class="inline-flex">
+                            @csrf
+                            <button type="submit"
+                                    class="p-1.5 rounded-full text-on-surface-variant hover:text-danger hover:bg-rose-50 transition-colors cursor-pointer"
+                                    title="Keluar / Logout"
+                                    aria-label="Logout">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                                 </svg>
-                            </p>
-                            <p class="text-[10px] font-mono text-on-surface-variant leading-tight">{{ auth()->user()->role_label }}</p>
-                        </div>
-                    </a>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </header>
 
@@ -104,6 +130,7 @@
     </script>
 
     @include('components.sweetalert')
+    @include('components.system-guide-modal')
     @stack('scripts')
 </body>
 </html>

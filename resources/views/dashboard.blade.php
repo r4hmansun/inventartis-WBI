@@ -8,245 +8,163 @@
 
     @if(auth()->user()->hasRole('user'))
     {{-- ========================================================================= --}}
-    {{-- PORTAL INVENTARIS UNIT KERJA (STAF / KEPALA UNIT) --}}
+    {{-- PORTAL INVENTARIS UNIT KERJA (CLEAN, LEGA & READABLE) --}}
     {{-- ========================================================================= --}}
 
-    {{-- 1. Unit Context Header --}}
-    <div class="bg-surface-white rounded-xl border border-border-light p-5 sm:p-6 shadow-xs">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div class="space-y-1">
-                <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary text-white">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                        </svg>
-                        Unit: {{ $userDepartment ? $userDepartment->name : 'Staf / Operasional' }}
-                    </span>
-                    <span class="text-xs text-on-surface-variant bg-surface-container px-2.5 py-0.5 rounded-full font-mono font-medium">
-                        {{ $userDepartment ? $userDepartment->code : 'USER' }}
-                    </span>
-                </div>
-                <h2 class="font-display text-xl sm:text-2xl font-bold text-on-surface">
-                    Halo, {{ $user->name }}
-                </h2>
-                <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed max-w-2xl">
-                    Kelola peralatan kerja unit Anda, periksa barang terdaftar, dan ajukan permohonan mutasi inventaris secara resmi.
+    {{-- ALERT PENTING: HANYA MUNCUL JIKA ADA MUTASI MASUK YANG BUTUH PERSETUJUAN --}}
+    @if(isset($waitingApprovalMutationsCount) && $waitingApprovalMutationsCount > 0)
+    <div class="p-5 rounded-2xl bg-amber-50 border border-amber-300 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold shrink-0 shadow-xs">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-amber-950">
+                    Ada {{ $waitingApprovalMutationsCount }} Formulir Mutasi Menunggu Persetujuan Anda
+                </h3>
+                <p class="text-sm text-amber-900 mt-0.5">
+                    Ada barang baru/pindahan yang dialokasikan ke unit Anda. Silakan verifikasi fisik barang dan setujui formulirnya.
                 </p>
             </div>
-
-            {{-- Quick Action Buttons --}}
-            <div class="flex flex-wrap items-center gap-2.5 pt-3 lg:pt-0 border-t lg:border-t-0 border-border-light">
-                <a href="{{ route('assets.index', ['scope' => 'my_dept']) }}"
-                   class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-xs sm:text-sm font-semibold hover:bg-primary-light transition-all shadow-xs">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                    </svg>
-                    Semua Aset Unit
-                </a>
-                <button type="button" onclick="openGuideModal()"
-                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border-light bg-surface-white text-xs sm:text-sm font-medium text-on-surface hover:bg-surface-container transition-colors shadow-2xs">
-                    <svg class="w-4 h-4 text-primary-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    Panduan Minta Kode Aset
-                </button>
-            </div>
         </div>
+        <a href="{{ route('mutations.index', ['scope' => 'waiting_my_approval']) }}"
+           class="px-5 py-2.5 rounded-xl bg-amber-700 hover:bg-amber-800 text-white text-sm font-bold shadow-xs whitespace-nowrap text-center">
+            Tinjau &amp; Setujui Sekarang &rarr;
+        </a>
     </div>
+    @endif
 
-    {{-- 2. Ringkasan Metrik Unit --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        @include('components.stat-card', [
-            'title' => 'Barang di Unit Anda',
-            'value' => $deptTotalAssets,
-            'unit' => 'Unit',
-            'badge' => $userDepartment ? $userDepartment->code : 'Unit',
-            'badgeType' => 'neutral',
-            'subvalue' => 'Peralatan resmi tercatat',
-            'icon' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>'
-        ])
-
-        @include('components.stat-card', [
-            'title' => 'Siap Digunakan',
-            'value' => $deptActiveAssets,
-            'unit' => 'Aktif',
-            'badge' => 'Kondisi Baik',
-            'badgeType' => 'success',
-            'subvalue' => 'Operasional sehari-hari',
-            'icon' => '<svg class="w-4 h-4 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
-        ])
-
-        @include('components.stat-card', [
-            'title' => 'Dalam Perbaikan',
-            'value' => $deptRepairAssets,
-            'unit' => 'Unit',
-            'badge' => $deptRepairAssets > 0 ? 'Perlu Tindakan' : 'Nihil Rusak',
-            'badgeType' => $deptRepairAssets > 0 ? 'warning' : 'neutral',
-            'subvalue' => $deptRepairAssets > 0 ? 'Sedang ditangani teknisi' : 'Semua barang prima',
-            'icon' => '<svg class="w-4 h-4 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>'
-        ])
-
-        @include('components.stat-card', [
-            'title' => 'Nilai Inventaris Unit',
-            'value' => 'Rp ' . number_format($deptValuation, 0, ',', '.'),
-            'unit' => '',
-            'badge' => 'Total Nilai',
-            'badgeType' => 'teal',
-            'subvalue' => 'Akumulasi harga perolehan',
-            'icon' => '<svg class="w-4 h-4 text-primary-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
-        ])
-    </div>
-
-    {{-- 3. Panduan Alur Singkat (Clean Cards) --}}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {{-- Card 1 --}}
-        <div class="bg-surface-white rounded-xl border border-border-light p-4 sm:p-5 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all">
-            <div>
-                <div class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                </div>
-                <h3 class="font-display text-sm font-bold text-on-surface mb-1">
-                    Pengadaan Barang Baru
-                </h3>
-                <p class="text-xs text-on-surface-variant leading-relaxed mb-3">
-                    Pembelian barang baru wajib dilaporkan ke Keuangan untuk penomoran kode aset resmi.
-                </p>
+    {{-- Clean Header --}}
+    <div class="bg-surface-white rounded-2xl border border-border-light p-6 sm:p-8 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+        <div class="space-y-1.5">
+            <div class="flex items-center gap-2">
+                <span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold font-mono">
+                    {{ $userDepartment ? $userDepartment->code : 'UNIT' }}
+                </span>
+                <span class="text-sm font-semibold text-slate-500">
+                    {{ $userDepartment ? $userDepartment->name : 'Operasional' }}
+                </span>
             </div>
-            <button type="button" onclick="openGuideModal()"
-                    class="w-full text-center px-3 py-2 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold hover:bg-emerald-100 transition-colors">
-                Format Pengajuan &rarr;
-            </button>
-        </div>
-
-        {{-- Card 2 --}}
-        <div class="bg-surface-white rounded-xl border border-border-light p-4 sm:p-5 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all">
-            <div>
-                <div class="w-9 h-9 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center mb-3">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-                    </svg>
-                </div>
-                <h3 class="font-display text-sm font-bold text-on-surface mb-1">
-                    Mutasi &amp; Pindah Barang
-                </h3>
-                <p class="text-xs text-on-surface-variant leading-relaxed mb-3">
-                    Barang dipindahkan antar-ruangan atau departemen? Proses melalui formulir mutasi resmi dengan tombol persetujuan digital.
-                </p>
-            </div>
-            <a href="{{ route('mutations.create') }}"
-               class="w-full text-center px-3 py-2 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 text-xs font-semibold hover:bg-amber-100 transition-colors">
-                Ajukan Mutasi Barang &rarr;
-            </a>
-        </div>
-
-        {{-- Card 3 --}}
-        <div class="bg-surface-white rounded-xl border border-border-light p-4 sm:p-5 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all">
-            <div>
-                <div class="w-9 h-9 rounded-lg bg-teal-50 text-primary-light flex items-center justify-center mb-3">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                    </svg>
-                </div>
-                <h3 class="font-display text-sm font-bold text-on-surface mb-1">
-                    Cek Aturan Harga Barang
-                </h3>
-                <p class="text-xs text-on-surface-variant leading-relaxed mb-2">
-                    Ketik nominal harga perolehan untuk cek kategori:
-                </p>
-                <div class="space-y-2">
-                    <div class="relative">
-                        <span class="absolute left-3 top-2 text-xs font-mono text-on-surface-variant">Rp</span>
-                        <input type="number" id="quick-price-calc" placeholder="Contoh: 750000"
-                               class="w-full pl-9 pr-3 py-1.5 text-xs font-mono rounded-md border border-outline-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
-                               oninput="calculateAssetCategory(this.value)">
-                    </div>
-                    <div id="quick-calc-result" class="p-2 rounded-md text-xs hidden"></div>
-                </div>
-            </div>
-            <p class="text-[11px] text-on-surface-variant/70 mt-2">
-                Aturan WBI: Pencatatan inventaris resmi.
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">
+                Halo, {{ $user->name }}
+            </h2>
+            <p class="text-sm text-slate-600 max-w-xl">
+                Kelola daftar inventaris resmi di unit Anda atau ajukan pemindahan aset ke unit lain.
             </p>
         </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+            <a href="{{ route('mutations.create') }}"
+               class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-light text-white text-sm font-bold transition-all shadow-xs inline-flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Ajukan Mutasi Aset
+            </a>
+            <button type="button" onclick="openSystemGuideModal()"
+                    class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold transition-all shadow-2xs inline-flex items-center gap-2 cursor-pointer">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Panduan Alur
+            </button>
+        </div>
     </div>
 
-    {{-- 4. Daftar Inventaris di Unit --}}
-    <div class="bg-surface-white rounded-xl border border-border-light overflow-hidden shadow-xs">
-        <div class="px-5 py-4 border-b border-border-light flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div class="flex items-center gap-2.5">
-                <div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
-                <div>
-                    <h3 class="font-display text-sm sm:text-base font-bold text-on-surface">
-                        Daftar Inventaris Unit {{ $userDepartment ? $userDepartment->name : 'Anda' }}
-                    </h3>
-                    <p class="text-xs text-on-surface-variant">
-                        Barang-barang yang tercatat di unit Anda saat ini.
-                    </p>
-                </div>
+    {{-- 2 Ringkasan Utama (Lega & Jelas Dibaca) --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="bg-surface-white rounded-2xl border border-border-light p-6 shadow-xs flex items-center justify-between">
+            <div class="space-y-1">
+                <p class="text-sm font-semibold text-slate-500">Jumlah Barang di Unit Anda</p>
+                <p class="text-3xl sm:text-4xl font-bold font-mono text-slate-900">
+                    {{ $deptTotalAssets }} <span class="text-base font-sans font-normal text-slate-500">Unit</span>
+                </p>
+                <p class="text-sm text-slate-600 pt-1">
+                    <span class="text-emerald-700 font-semibold">{{ $deptActiveAssets }} Kondisi Baik</span> &bull; 
+                    <span class="text-amber-700 font-semibold">{{ $deptRepairAssets }} Dalam Perbaikan</span>
+                </p>
             </div>
-            <a href="{{ route('assets.index', ['scope' => 'my_dept']) }}"
-               class="text-xs font-semibold text-primary-light hover:text-primary transition-colors inline-flex items-center gap-1">
-                Buka Seluruh Aset Unit &rarr;
+            <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="bg-surface-white rounded-2xl border border-border-light p-6 shadow-xs flex items-center justify-between">
+            <div class="space-y-1">
+                <p class="text-sm font-semibold text-slate-500">Total Nilai Inventaris Unit</p>
+                <p class="text-2xl sm:text-3xl font-bold font-mono text-slate-900">
+                    Rp {{ number_format($deptValuation, 0, ',', '.') }}
+                </p>
+                <p class="text-sm text-slate-500 pt-1">
+                    Akumulasi harga perolehan resmi tercatat
+                </p>
+            </div>
+            <div class="w-14 h-14 rounded-2xl bg-primary-surface text-primary flex items-center justify-center shrink-0">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    {{-- Clean Table of Assets --}}
+    <div class="bg-surface-white rounded-2xl border border-border-light overflow-hidden shadow-xs">
+        <div class="px-6 py-5 border-b border-border-light flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-bold text-slate-900">Daftar Barang di Unit {{ $userDepartment ? $userDepartment->name : 'Anda' }}</h3>
+                <p class="text-sm text-slate-500">Daftar inventaris yang saat ini aktif di bawah unit kerja Anda.</p>
+            </div>
+            <a href="{{ route('assets.index', ['scope' => 'my_dept']) }}" class="text-sm font-bold text-primary hover:underline">
+                Buka Seluruh Aset &rarr;
             </a>
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm min-w-[600px]">
+            <table class="w-full text-left text-sm min-w-[650px]">
                 <thead>
-                    <tr class="bg-surface-container/60 border-b border-border-light text-[11px] font-mono font-semibold text-on-surface-variant uppercase tracking-wider">
-                        <th class="px-5 py-3">Kode Aset</th>
-                        <th class="px-5 py-3">Nama Barang</th>
-                        <th class="px-5 py-3">Nilai Perolehan</th>
-                        <th class="px-5 py-3">Tanggal Diterima</th>
-                        <th class="px-5 py-3">Status</th>
-                        <th class="px-5 py-3 text-right">Aksi</th>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        <th class="px-6 py-4">Kode Aset</th>
+                        <th class="px-6 py-4">Nama Barang</th>
+                        <th class="px-6 py-4">Nilai Perolehan</th>
+                        <th class="px-6 py-4">Tanggal Terima</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4 text-right">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-border-light text-xs">
+                <tbody class="divide-y divide-slate-100">
                     @forelse($deptAssets as $asset)
-                    <tr class="table-row-hover transition-colors">
-                        <td class="px-5 py-3.5 font-mono font-semibold text-primary-light whitespace-nowrap">
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="px-6 py-4 font-mono font-bold text-primary whitespace-nowrap">
                             {{ $asset->asset_code }}
                         </td>
-                        <td class="px-5 py-3.5">
-                            <p class="font-semibold text-on-surface text-sm">{{ $asset->name }}</p>
-                            <p class="text-[11px] text-on-surface-variant mt-0.5">Didaftarkan: {{ $asset->creator ? $asset->creator->name : 'Sistem' }}</p>
+                        <td class="px-6 py-4">
+                            <p class="font-bold text-slate-900 text-sm">{{ $asset->name }}</p>
                         </td>
-                        <td class="px-5 py-3.5 font-mono text-xs text-on-surface font-medium whitespace-nowrap">
+                        <td class="px-6 py-4 font-mono text-slate-800 font-semibold whitespace-nowrap">
                             Rp {{ number_format($asset->purchase_price, 0, ',', '.') }}
                         </td>
-                        <td class="px-5 py-3.5 text-on-surface-variant whitespace-nowrap font-mono text-[11px]">
+                        <td class="px-6 py-4 text-slate-600 whitespace-nowrap text-sm">
                             {{ $asset->purchase_date ? $asset->purchase_date->format('d M Y') : '-' }}
                         </td>
-                        <td class="px-5 py-3.5 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             @include('components.status-badge', ['status' => $asset->status])
                         </td>
-                        <td class="px-5 py-3.5 text-right whitespace-nowrap">
+                        <td class="px-6 py-4 text-right whitespace-nowrap">
                             <a href="{{ route('assets.show', $asset) }}"
-                               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border-light bg-surface-white text-xs font-semibold text-on-surface hover:bg-surface-container transition-colors shadow-2xs">
-                                <svg class="w-3.5 h-3.5 text-on-surface-variant" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                </svg>
-                                Detail
+                               class="px-3.5 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition-colors shadow-2xs">
+                                Detail Aset
                             </a>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-5 py-12 text-center">
-                            <div class="max-w-md mx-auto text-center space-y-3">
-                                <div class="w-12 h-12 mx-auto rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                                    </svg>
-                                </div>
-                                <h4 class="text-sm font-bold text-on-surface">Belum Ada Inventaris Terdaftar</h4>
-                                <p class="text-xs text-on-surface-variant leading-relaxed">
-                                    Jika unit Anda baru saja membeli barang baru, silakan hubungi Bagian Keuangan untuk pencatatan kode inventaris resmi.
-                                </p>
-                            </div>
+                        <td colspan="6" class="px-6 py-12 text-center text-slate-500">
+                            <p class="font-bold text-slate-800 text-base mb-1">Belum Ada Inventaris Terdaftar</p>
+                            <p class="text-sm">Jika unit Anda baru membeli barang (&ge; Rp 500rb), hubungi Bagian Keuangan agar didaftarkan ke sistem.</p>
                         </td>
                     </tr>
                     @endforelse
@@ -255,54 +173,413 @@
         </div>
     </div>
 
-    @else
-    {{-- ========================================================================= --}}
-    {{-- DASHBOARD EKSEKUTIF UNTUK ADMIN, KEUANGAN & INVENTARIS --}}
-    {{-- ========================================================================= --}}
 
-    {{-- 1. Executive Context & Action Bar --}}
-    <div class="bg-surface-white rounded-xl border border-border-light p-4 sm:p-5 shadow-xs">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-                <div class="flex items-center gap-2 mb-1">
-                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase tracking-wider bg-primary text-white">
-                        WBI Inventaris
-                    </span>
-                </div>
-                <h2 class="font-display text-xl sm:text-2xl font-bold text-on-surface">
-                    Ringkasan Inventaris
+    {{-- ========================================================================= --}}
+    {{-- 2. PORTAL BAGIAN KEUANGAN (SESUAI FLOW KODE ASET - TANPA GRAFIK) --}}
+    {{-- ========================================================================= --}}
+    @elseif(auth()->user()->hasRole('finance'))
+
+    {{-- Header Banner Keuangan --}}
+    <div class="bg-gradient-to-r from-emerald-900 to-teal-800 text-white rounded-2xl p-6 sm:p-7 shadow-xs">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+            <div class="space-y-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-white/20 text-white">
+                    Peran: Bagian Keuangan
+                </span>
+                <h2 class="font-display text-2xl sm:text-3xl font-bold text-white">
+                    Pencatatan &amp; Penerbitan Kode Aset
                 </h2>
-                <p class="text-xs text-on-surface-variant mt-0.5">
-                    Monitoring data aset, stok gudang, dan pergerakan mutasi antar-unit.
+                <p class="text-sm text-emerald-100 max-w-2xl leading-relaxed">
+                    Menerima permohonan kode dari unit kerja, menganalisis nilai perolehan (&ge; Rp 500.000), dan mendaftarkan aset baru ke Gudang Inventaris.
+                </p>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 shrink-0">
+                <a href="{{ route('assets.create') }}"
+                   class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-emerald-950 text-sm font-bold hover:bg-emerald-50 transition-all shadow-sm">
+                    <svg class="w-5 h-5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    + Registrasi Aset Baru
+                </a>
+                <button type="button" onclick="openSystemGuideModal('kode-aset')"
+                        class="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-xs sm:text-sm font-semibold text-white transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Panduan Alur Kode Aset
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Ringkasan Metrik Angka Sederhana (3 Kartu Jelas) --}}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
+            <div class="space-y-1">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Aset Terdaftar</p>
+                <h3 class="text-3xl font-bold text-slate-900 font-mono">{{ number_format($stats['total_assets']) }} <span class="text-sm font-normal text-slate-500">Unit</span></h3>
+                <p class="text-xs text-slate-600 font-mono">Valuasi: <strong class="text-slate-900">Rp {{ number_format($stats['total_valuation'], 0, ',', '.') }}</strong></p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
+            <div class="space-y-1">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Aset Baru di Gudang</p>
+                <h3 class="text-3xl font-bold text-slate-900 font-mono">{{ number_format($stats['in_storage']) }} <span class="text-sm font-normal text-slate-500">Unit</span></h3>
+                <p class="text-xs text-slate-600">Menunggu penyaluran oleh Inventaris</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>
+            </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
+            <div class="space-y-1">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Standar Nilai Kapitalisasi</p>
+                <h3 class="text-2xl font-bold text-emerald-800 font-mono">&ge; Rp 500.000</h3>
+                <p class="text-xs text-slate-600">&lt; Rp 500rb masuk beban operasional</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center font-bold">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+    </div>
+
+    {{-- Panduan Alur Kerja Sesuai SOP (3 Langkah Jelas) --}}
+    <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+        <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+            </svg>
+            <h3 class="font-display text-base font-bold text-slate-900">Alur Standar Pencatatan Kode Aset Politeknik WBI</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div class="p-4 rounded-xl bg-white border border-slate-200 space-y-1">
+                <div class="flex items-center gap-2 font-bold text-slate-900">
+                    <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs flex items-center justify-center font-bold">1</span>
+                    <span>Permohonan User</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    User/Unit kerja membeli barang baru dan mengajukan permintaan kode inventaris kepada Bagian Keuangan lengkap dengan nota belanja.
                 </p>
             </div>
 
-            {{-- Action Cluster --}}
+            <div class="p-4 rounded-xl bg-white border border-slate-200 space-y-1">
+                <div class="flex items-center gap-2 font-bold text-slate-900">
+                    <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs flex items-center justify-center font-bold">2</span>
+                    <span>Analisis Nilai Aset</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Keuangan memeriksa harga beli:
+                    <br>&bull; <strong>&lt; Rp 500.000:</strong> Tidak diinput (Beban operasional / Stop).
+                    <br>&bull; <strong>&ge; Rp 500.000:</strong> Klik tombol <strong>Registrasi Aset Baru</strong>.
+                </p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-white border border-slate-200 space-y-1">
+                <div class="flex items-center gap-2 font-bold text-slate-900">
+                    <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs flex items-center justify-center font-bold">3</span>
+                    <span>Masuk Gudang &amp; Selesai</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Aset resmi diterbitkan dan otomatis masuk ke <strong>Gudang Inventaris [GDG-INV]</strong>. Tugas Keuangan selesai, selanjutnya Bagian Inventaris yang menyalurkan aset ke unit kerja.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {{-- Tabel Aset Terbaru yang Dicatat --}}
+    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+        <div class="p-5 border-b border-slate-200 flex items-center justify-between">
+            <div>
+                <h3 class="font-display text-base font-bold text-slate-900">Daftar Aset Terbaru Didaftarkan</h3>
+                <p class="text-xs text-slate-500">Aset-aset resmi yang baru saja dicatat oleh Keuangan</p>
+            </div>
+            <a href="{{ route('assets.index') }}" class="text-xs font-bold text-primary hover:text-primary-light transition-colors">
+                Lihat Seluruh Aset &rarr;
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm min-w-[650px]">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        <th class="px-6 py-4">Kode Aset</th>
+                        <th class="px-6 py-4">Nama Barang</th>
+                        <th class="px-6 py-4">Harga Perolehan</th>
+                        <th class="px-6 py-4">Tanggal Input</th>
+                        <th class="px-6 py-4">Status &amp; Lokasi</th>
+                        <th class="px-6 py-4 text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @forelse($recentAssets as $asset)
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="px-6 py-4 font-mono font-bold text-primary whitespace-nowrap">
+                            {{ $asset->asset_code }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="font-bold text-slate-900 text-sm">{{ $asset->name }}</p>
+                            <p class="text-xs text-slate-500">Kategori: {{ $asset->category->name ?? 'Umum' }}</p>
+                        </td>
+                        <td class="px-6 py-4 font-mono font-bold text-slate-900 whitespace-nowrap">
+                            Rp {{ number_format($asset->purchase_price, 0, ',', '.') }}
+                        </td>
+                        <td class="px-6 py-4 text-slate-600 text-xs whitespace-nowrap">
+                            {{ $asset->purchase_date ? $asset->purchase_date->format('d M Y') : '-' }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="space-y-1">
+                                @include('components.status-badge', ['status' => $asset->status])
+                                <p class="text-[11px] text-slate-500">{{ $asset->currentDepartment ? $asset->currentDepartment->name : '-' }}</p>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-right whitespace-nowrap">
+                            <a href="{{ route('assets.show', $asset) }}"
+                               class="px-3.5 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition-colors shadow-2xs">
+                                Detail
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-slate-500">
+                            <p class="font-bold text-slate-800 text-base mb-1">Belum Ada Aset Terdaftar</p>
+                            <p class="text-sm">Klik tombol "Registrasi Aset Baru" di atas untuk menambahkan aset resmi baru.</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    {{-- ========================================================================= --}}
+    {{-- 3. PORTAL BAGIAN INVENTARIS (PENYALURAN GUDANG & MUTASI - TANPA GRAFIK) --}}
+    {{-- ========================================================================= --}}
+    @elseif(auth()->user()->hasRole('inventory'))
+    
+    {{-- Header Banner Inventaris --}}
+    <div class="bg-gradient-to-r from-teal-900 to-slate-900 text-white rounded-2xl p-6 sm:p-7 shadow-xs">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+            <div class="space-y-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-white/20 text-white">
+                    Peran: Bagian Inventaris
+                </span>
+                <h2 class="font-display text-2xl sm:text-3xl font-bold text-white">
+                    Pusat Distribusi Gudang &amp; Eksekusi Mutasi
+                </h2>
+                <p class="text-sm text-teal-100 max-w-2xl leading-relaxed">
+                    Menyalurkan aset dari Gudang ke departemen penanggung jawab, mengeksekusi mutasi yang telah disetujui ganda, dan mengarsipkan Berita Acara (BAST).
+                </p>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 shrink-0">
+                <a href="{{ route('mutations.create', ['from_department_id' => \App\Models\Department::where('code', 'GDG-INV')->value('id')]) }}"
+                   class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-teal-950 text-sm font-bold hover:bg-teal-50 transition-all shadow-sm">
+                    <svg class="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                    Salurkan Aset dari Gudang
+                </a>
+                <button type="button" onclick="openSystemGuideModal('mutasi-aset')"
+                        class="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-xs sm:text-sm font-semibold text-white transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Panduan Alur Mutasi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Ringkasan Metrik Angka Sederhana (3 Kartu Jelas) --}}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
+            <div class="space-y-1">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Aset di Gudang Inventaris</p>
+                <h3 class="text-3xl font-bold text-slate-900 font-mono">{{ number_format($stats['in_storage']) }} <span class="text-sm font-normal text-slate-500">Unit</span></h3>
+                <p class="text-xs text-slate-600">Siap disalurkan ke unit penanggung jawab</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>
+            </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
+            <div class="space-y-1">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Mutasi Siap Eksekusi</p>
+                <h3 class="text-3xl font-bold text-amber-700 font-mono">{{ number_format($stats['ready_execution']) }} <span class="text-sm font-normal text-slate-500">Form</span></h3>
+                <p class="text-xs text-slate-600">Dual-approval selesai &bull; Menunggu eksekusi</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center font-bold">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
+            <div class="space-y-1">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Arsip Berita Acara</p>
+                <h3 class="text-3xl font-bold text-emerald-800 font-mono">{{ number_format($stats['archived_mutations']) }} <span class="text-sm font-normal text-slate-500">BAST</span></h3>
+                <p class="text-xs text-slate-600">Mutasi resmi selesai dan tersimpan</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+        </div>
+    </div>
+
+    {{-- Panduan Alur Kerja Inventaris (3 Langkah Jelas) --}}
+    <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+        <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+            </svg>
+            <h3 class="font-display text-base font-bold text-slate-900">Alur Standar Pengelolaan &amp; Mutasi Aset WBI</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div class="p-4 rounded-xl bg-white border border-slate-200 space-y-1">
+                <div class="flex items-center gap-2 font-bold text-slate-900">
+                    <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-800 text-xs flex items-center justify-center font-bold">1</span>
+                    <span>Salurkan dari Gudang</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Aset baru di Gudang Inventaris dimutasi ke departemen penanggung jawab (atau ke Inventaris sendiri jika dikelola langsung).
+                </p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-white border border-slate-200 space-y-1">
+                <div class="flex items-center gap-2 font-bold text-slate-900">
+                    <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-800 text-xs flex items-center justify-center font-bold">2</span>
+                    <span>Approval Penerima</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Departemen penerima memeriksa kondisi fisik barang dan melakukan persetujuan (*Approval*) di sistem.
+                </p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-white border border-slate-200 space-y-1">
+                <div class="flex items-center gap-2 font-bold text-slate-900">
+                    <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-800 text-xs flex items-center justify-center font-bold">3</span>
+                    <span>Eksekusi &amp; Arsip BAST</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Inventaris melakukan serah terima fisik, klik *Eksekusi Mutasi*, dan mengunduh/mencetak Berita Acara sah (BAST).
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {{-- Tabel Mutasi Berjalan / Siap Eksekusi --}}
+    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+        <div class="p-5 border-b border-slate-200 flex items-center justify-between">
+            <div>
+                <h3 class="font-display text-base font-bold text-slate-900">Formulir Mutasi Siap Tindak Lanjut</h3>
+                <p class="text-xs text-slate-500">Daftar perpindahan aset yang memerlukan tindakan atau eksekusi</p>
+            </div>
+            <a href="{{ route('mutations.index') }}" class="text-xs font-bold text-primary hover:text-primary-light transition-colors">
+                Lihat Seluruh Mutasi &rarr;
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm min-w-[650px]">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        <th class="px-6 py-4">Nomor Formulir</th>
+                        <th class="px-6 py-4">Alur Perpindahan</th>
+                        <th class="px-6 py-4">Pengirim</th>
+                        <th class="px-6 py-4">Tanggal</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4 text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @forelse($recentMutations as $mutation)
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="px-6 py-4 font-mono font-bold text-primary whitespace-nowrap">
+                            {{ $mutation->form_number }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2 text-sm font-semibold text-slate-900">
+                                <span>{{ $mutation->fromDepartment ? $mutation->fromDepartment->name : '-' }}</span>
+                                <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                </svg>
+                                <span class="text-primary">{{ $mutation->toDepartment ? $mutation->toDepartment->name : '-' }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-slate-600 text-xs">
+                            {{ $mutation->sender ? $mutation->sender->name : 'Sistem' }}
+                        </td>
+                        <td class="px-6 py-4 text-slate-600 text-xs whitespace-nowrap">
+                            {{ $mutation->created_at ? $mutation->created_at->format('d M Y') : '-' }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @include('components.status-badge', ['status' => $mutation->status])
+                        </td>
+                        <td class="px-6 py-4 text-right whitespace-nowrap">
+                            <a href="{{ route('mutations.show', $mutation) }}"
+                               class="px-3.5 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition-colors shadow-2xs">
+                                Buka Form
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-slate-500">
+                            <p class="font-bold text-slate-800 text-base mb-1">Belum Ada Mutasi Berjalan</p>
+                            <p class="text-sm">Klik "Salurkan Aset dari Gudang" untuk memulai mutasi baru.</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    {{-- ========================================================================= --}}
+    {{-- 4. DASHBOARD KHUSUS ADMINISTRATOR (MONITORING & GRAFIK MAKRO) --}}
+    {{-- ========================================================================= --}}
+    @else
+    {{-- HUB ADMIN / SUPER ADMIN --}}
+    <div class="bg-surface-white rounded-2xl border border-border-light p-5 sm:p-6 shadow-xs">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="space-y-1">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-primary text-white">
+                        WBI Inventaris &bull; Administrator
+                    </span>
+                </div>
+                <h2 class="font-display text-xl sm:text-2xl font-bold text-on-surface">
+                    Ringkasan Eksekutif &amp; Monitoring Sistem
+                </h2>
+                <p class="text-xs text-on-surface-variant">
+                    Monitoring menyeluruh pergerakan aset, audit trail transaksi, serta pengelolaan master data kampus.
+                </p>
+            </div>
+
             <div class="flex flex-wrap items-center gap-2.5">
-                <button type="button" onclick="openSopModal()"
-                        class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border-light bg-surface-white text-xs font-medium text-on-surface hover:bg-surface-container transition-colors shadow-2xs">
+                <button type="button" onclick="openSystemGuideModal()"
+                        class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-border-light bg-surface-white text-xs font-semibold text-on-surface hover:bg-surface-container transition-colors shadow-2xs">
                     <svg class="w-3.5 h-3.5 text-primary-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    Panduan Alur SOP
+                    Panduan Alur Sistem
                 </button>
 
-                @if(auth()->user()->hasRole('finance', 'admin'))
                 <a href="{{ route('assets.create') }}"
-                   class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-primary-light transition-all shadow-xs">
+                   class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-primary text-white text-xs font-semibold hover:bg-primary-light transition-all shadow-xs">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
-                    Registrasi Aset Baru
-                </a>
-                @endif
-
-                <a href="{{ route('assets.index') }}"
-                   class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border-light bg-surface-white text-xs font-medium text-on-surface hover:bg-surface-container transition-colors shadow-2xs">
-                    <svg class="w-3.5 h-3.5 text-on-surface-variant" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
-                    </svg>
-                    Daftar Aset
+                    Registrasi Aset
                 </a>
             </div>
         </div>
@@ -368,6 +645,7 @@
         {{-- Baris 1: 2 Grafik Utama (Hub Distribusi & Kelayakan + Valuasi Departemen) --}}
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
             {{-- Card 1: Distribusi & Kondisi Aset --}}
+
             <div class="lg:col-span-6 bg-surface-white rounded-xl border border-border-light p-5 shadow-xs flex flex-col justify-between">
                 <div>
                     {{-- Header with Segmented Pill Tabs & Chart Type Toggle --}}
@@ -543,369 +821,32 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    {{-- 4. Main Operational Ledger: 2-Column Balanced Grid --}}
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-        {{-- Left: Daftar Aset Inventaris Terbaru (7 Cols) --}}
-        <div class="lg:col-span-7 bg-surface-white rounded-xl border border-border-light overflow-hidden shadow-xs flex flex-col justify-between">
-            <div>
-                <div class="px-5 py-3.5 border-b border-border-light flex items-center justify-between bg-surface-white">
-                    <div class="flex items-center gap-2">
-                        <div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
-                        <h3 class="font-display text-sm font-bold text-on-surface">Aset Inventaris Terbaru</h3>
-                        <span class="text-[11px] font-mono text-on-surface-variant">({{ $recentAssets->count() }} Terkini)</span>
-                    </div>
-                    <a href="{{ route('assets.index') }}" class="text-xs font-semibold text-primary-light hover:text-primary transition-colors inline-flex items-center gap-1">
-                        Lihat Seluruh Aset &rarr;
-                    </a>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm min-w-[550px]">
-                        <thead>
-                            <tr class="bg-surface-container/60 border-b border-border-light text-[11px] font-mono font-semibold text-on-surface-variant uppercase tracking-wider">
-                                <th class="px-4 py-2.5">Kode Aset</th>
-                                <th class="px-4 py-2.5">Nama &amp; Nilai</th>
-                                <th class="px-4 py-2.5">Departemen</th>
-                                <th class="px-4 py-2.5">Status</th>
-                                <th class="px-4 py-2.5 text-right">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-border-light text-xs">
-                            @forelse($recentAssets as $asset)
-                            <tr class="table-row-hover transition-colors">
-                                <td class="px-4 py-3 font-mono font-medium text-primary-light whitespace-nowrap">
-                                    {{ $asset->asset_code }}
-                                </td>
-                                <td class="px-4 py-3">
-                                    <p class="font-semibold text-on-surface">{{ $asset->name }}</p>
-                                    <p class="text-[11px] font-mono text-on-surface-variant">Rp {{ number_format($asset->purchase_price, 0, ',', '.') }}</p>
-                                </td>
-                                <td class="px-4 py-3">
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-on-surface">
-                                        {{ $asset->currentDepartment ? $asset->currentDepartment->name : 'N/A' }}
-                                    </span>
-                                </td>
-                                <td class="px-4 py-3 whitespace-nowrap">
-                                    @include('components.status-badge', ['status' => $asset->status])
-                                </td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap">
-                                    <a href="{{ route('assets.show', $asset) }}"
-                                       class="inline-flex items-center px-2.5 py-1 rounded-md border border-border-light bg-surface-white text-[11px] font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors shadow-2xs">
-                                        Detail
-                                    </a>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="5" class="px-4 py-10 text-center">
-                                    <div class="max-w-xs mx-auto text-center space-y-2">
-                                        <div class="w-10 h-10 mx-auto rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                                            </svg>
-                                        </div>
-                                        <p class="text-xs font-semibold text-on-surface">Belum Ada Aset Terdaftar</p>
-                                        <p class="text-[11px] text-on-surface-variant">
-                                            Aset yang dicatat oleh Bagian Keuangan akan tampil di sini.
-                                        </p>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="px-4 py-2.5 bg-surface-container/30 border-t border-border-light text-[11px] font-mono text-on-surface-variant flex items-center justify-between">
-                <span>Sistem Inventaris Politeknik WBI</span>
-                <span>Standar: AST/[DEPT]/[MM]/[YYYY]/[NO]</span>
-            </div>
-        </div>
-
-        {{-- Right: Mutasi & Audit Trail Stream (5 Cols) --}}
-        <div class="lg:col-span-5 space-y-5">
-
-            {{-- Mutasi Form List --}}
-            <div class="bg-surface-white rounded-xl border border-border-light overflow-hidden shadow-xs">
-                <div class="px-4 py-3.5 border-b border-border-light flex items-center justify-between bg-surface-white">
-                    <div class="flex items-center gap-2">
-                        <div class="w-2.5 h-2.5 rounded-full bg-secondary-hover"></div>
-                        <h3 class="font-display text-sm font-bold text-on-surface">Alur Mutasi Terkini</h3>
-                    </div>
-                    <a href="{{ route('mutations.index') }}" class="text-[11px] font-semibold text-primary-light hover:text-primary transition-colors">
-                        Lihat Semua &rarr;
-                    </a>
-                </div>
-
-                <div class="divide-y divide-border-light text-xs">
-                    @forelse($recentMutations as $mutation)
-                    <a href="{{ route('mutations.show', $mutation) }}" class="block p-3.5 hover:bg-surface-container/30 transition-colors">
-                        <div class="flex items-center justify-between gap-2 mb-1">
-                            <span class="font-mono text-xs font-semibold text-secondary-hover">
-                                {{ $mutation->form_number }}
-                            </span>
-                            @include('components.status-badge', ['status' => $mutation->status])
-                        </div>
-                        <div class="flex items-center gap-1.5 text-xs text-on-surface mt-1">
-                            <span class="font-medium">{{ $mutation->fromDepartment ? $mutation->fromDepartment->name : 'N/A' }}</span>
-                            <span class="text-on-surface-variant font-mono">&rarr;</span>
-                            <span class="font-medium">{{ $mutation->toDepartment ? $mutation->toDepartment->name : 'N/A' }}</span>
-                        </div>
-                        <div class="flex items-center justify-between text-[11px] text-on-surface-variant font-mono mt-1.5">
-                            <span>Oleh: {{ $mutation->sender ? $mutation->sender->name : 'Sistem' }}</span>
-                            <span>{{ $mutation->created_at ? $mutation->created_at->format('d/m/Y') : '-' }}</span>
-                        </div>
-                    </a>
-                    @empty
-                    <div class="p-6 text-center">
-                        <div class="w-8 h-8 mx-auto rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant mb-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-                            </svg>
-                        </div>
-                        <p class="text-xs font-semibold text-on-surface">Belum Ada Mutasi Berjalan</p>
-                        <p class="text-[11px] text-on-surface-variant mt-0.5">
-                            Pengajuan mutasi aset akan ditampilkan di sini.
-                        </p>
-                    </div>
-                    @endforelse
-                </div>
-            </div>
-
-            {{-- Audit Trail (Log Riwayat) --}}
-            <div class="bg-surface-white rounded-xl border border-border-light overflow-hidden shadow-xs">
-                <div class="px-4 py-3.5 border-b border-border-light flex items-center justify-between bg-surface-white">
-                    <div class="flex items-center gap-2">
-                        <div class="w-2.5 h-2.5 rounded-full bg-slate-gray"></div>
-                        <h3 class="font-display text-sm font-bold text-on-surface">Audit Trail Terkini</h3>
-                    </div>
-                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-stone-100 text-stone-600 border border-stone-200">
-                        LOG PERMANEN
-                    </span>
-                </div>
-
-                <div class="p-3.5">
-                    @if($recentAuditLogs->count() > 0)
-                    <div class="space-y-3">
-                        @foreach($recentAuditLogs as $log)
-                        <div class="flex items-start gap-2.5 text-xs">
-                            <div class="w-1.5 h-1.5 rounded-full bg-primary-light mt-1.5 shrink-0"></div>
-                            <div class="flex-1">
-                                <p class="text-xs text-on-surface">
-                                    <strong class="font-semibold">{{ $log->action_label }}</strong>:
-                                    <span class="font-mono text-primary-light font-medium">{{ $log->asset ? $log->asset->asset_code : 'Aset' }}</span>
-                                </p>
-                                <p class="text-[11px] text-on-surface-variant font-mono">
-                                    {{ $log->actor ? $log->actor->name : 'Sistem' }} &bull; {{ $log->created_at->format('d/m/Y H:i') }}
-                                </p>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                    @else
-                    <div class="py-3 text-center">
-                        <p class="text-xs text-on-surface-variant">Log audit pergerakan aset terekam secara otomatis.</p>
-                    </div>
-                    @endif
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    {{-- 4. Department Asset Distribution Grid --}}
-    <div class="bg-surface-white rounded-xl border border-border-light p-4 sm:p-5 shadow-xs">
-        <div class="flex items-center justify-between mb-3 pb-2 border-b border-border-light">
-            <div class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-primary-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                </svg>
-                <h3 class="font-display text-xs font-bold uppercase tracking-wider text-on-surface">
-                    Distribusi Aset Per Departemen
-                </h3>
-            </div>
-            <span class="text-[11px] font-mono text-on-surface-variant">
-                Total {{ $departments->count() }} Departemen Aktif
-            </span>
-        </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-            @foreach($departments as $dept)
-            <div class="p-3 rounded-lg border border-border-light bg-surface-container/20 hover:bg-surface-container/50 transition-colors flex flex-col justify-between">
-                <div class="flex items-center justify-between mb-1">
-                    <span class="text-[10px] font-mono font-bold text-primary-light uppercase tracking-wider">{{ $dept->code }}</span>
-                    <span class="font-mono text-xs font-bold text-on-surface">{{ $dept->assets_count }} <span class="text-[10px] font-normal text-on-surface-variant">unit</span></span>
-                </div>
-                <p class="text-xs text-on-surface-variant truncate" title="{{ $dept->name }}">{{ $dept->name }}</p>
-            </div>
-            @endforeach
-        </div>
-    </div>
     @endif
 
-</div>
-
-{{-- MODAL PANDUAN KODE ASET (UNTUK USER) --}}
-<div id="guide-modal" class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
-    <div class="bg-surface-white rounded-xl border border-border-light max-w-lg w-full p-6 shadow-xl space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-border-light">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                </div>
-                <div>
-                    <h4 class="font-display text-base font-bold text-on-surface">Panduan Permohonan Kode Aset</h4>
-                    <p class="text-xs text-on-surface-variant">Pencatatan inventaris baru (&ge; Rp 500.000)</p>
-                </div>
-            </div>
-            <button type="button" onclick="closeGuideModal()" class="text-on-surface-variant hover:text-on-surface p-1 rounded-md hover:bg-surface-container">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-        </div>
-
-        <div class="space-y-3 text-xs text-on-surface-variant leading-relaxed">
-            <div class="p-3 rounded-lg bg-stone-50 border border-stone-200">
-                <p class="font-semibold text-on-surface mb-1">Syarat Pencatatan Aset Resmi:</p>
-                <ul class="list-disc list-inside space-y-0.5 text-stone-700">
-                    <li>Harga beli minimal <strong>Rp 500.000</strong> per unit</li>
-                    <li>Memiliki bukti kuitansi/faktur pembelian yang sah</li>
-                    <li>Masa manfaat &gt; 1 tahun (bukan barang habis pakai)</li>
-                </ul>
-            </div>
-
-            <div>
-                <p class="font-semibold text-on-surface mb-1">Format Permohonan ke Bagian Keuangan:</p>
-                <div class="p-3 rounded-lg bg-surface-container/60 border border-outline-variant font-mono text-[11px] text-on-surface space-y-1">
-                    <p id="template-text">Yth. Bagian Keuangan WBI,&#13;&#10;Kami dari Unit {{ $userDepartment ? $userDepartment->name : 'Operasional' }} mengajukan pencatatan aset baru:&#13;&#10;- Nama Barang: [Nama/Merk Barang]&#13;&#10;- Harga Beli: Rp [Nominal &ge; 500.000]&#13;&#10;- Tanggal Pembelian: [Tanggal]&#13;&#10;- Bukti Nota: (Terlampir)&#13;&#10;Mohon dibuatkan kode aset resmi. Terima kasih.</p>
-                    <button type="button" onclick="copyTemplateText()" class="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded bg-primary text-white text-[11px] font-sans font-semibold hover:bg-primary-light transition-colors">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-                        Salin Format Pesan
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="pt-3 border-t border-border-light flex justify-end">
-            <button type="button" onclick="closeGuideModal()" class="px-4 py-2 rounded-lg bg-surface-container text-xs font-semibold text-on-surface hover:bg-surface-container-high transition-colors">
-                Tutup Panduan
-            </button>
-        </div>
-    </div>
-</div>
-
-{{-- MODAL PANDUAN ALUR SOP (UNTUK ADMIN / EKSEKUTIF) --}}
-<div id="sop-modal" class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
-    <div class="bg-surface-white rounded-xl border border-border-light max-w-2xl w-full p-6 shadow-xl space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-border-light">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-lg bg-teal-50 text-primary-light flex items-center justify-center">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                </div>
-                <div>
-                    <h4 class="font-display text-base font-bold text-on-surface">Arsitektur Siklus Hidup Aset WBI</h4>
-                    <p class="text-xs text-on-surface-variant">Standard Operating Procedure &amp; Business Rules</p>
-                </div>
-            </div>
-            <button type="button" onclick="closeSopModal()" class="text-on-surface-variant hover:text-on-surface p-1 rounded-md hover:bg-surface-container">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div class="p-3.5 rounded-lg border border-border-light bg-surface-container/30">
-                <div class="flex items-center justify-between mb-1">
-                    <span class="font-mono font-bold text-primary-light text-[10px]">TAHAP 1</span>
-                    <span class="font-mono text-[10px] text-on-surface-variant">Keuangan</span>
-                </div>
-                <h5 class="font-semibold text-on-surface mb-0.5">Registrasi &amp; Validasi Nilai</h5>
-                <p class="text-on-surface-variant text-[11px] leading-relaxed">
-                    Validasi harga perolehan &ge; Rp 500.000 dan penerbitan nomor kode unik sistem.
-                </p>
-            </div>
-
-            <div class="p-3.5 rounded-lg border border-border-light bg-surface-container/30">
-                <div class="flex items-center justify-between mb-1">
-                    <span class="font-mono font-bold text-slate-700 text-[10px]">TAHAP 2</span>
-                    <span class="font-mono text-[10px] text-on-surface-variant">Gudang INV</span>
-                </div>
-                <h5 class="font-semibold text-on-surface mb-0.5">Penampungan Gudang</h5>
-                <p class="text-on-surface-variant text-[11px] leading-relaxed">
-                    Aset baru masuk pool Gudang Inventaris untuk pelabelan fisik barcode/QR sebelum didistribusikan.
-                </p>
-            </div>
-
-            <div class="p-3.5 rounded-lg border border-border-light bg-surface-container/30">
-                <div class="flex items-center justify-between mb-1">
-                    <span class="font-mono font-bold text-amber-700 text-[10px]">TAHAP 3</span>
-                    <span class="font-mono text-[10px] text-on-surface-variant">Departemen</span>
-                </div>
-                <h5 class="font-semibold text-on-surface mb-0.5">Pengajuan &amp; Approval Digital</h5>
-                <p class="text-on-surface-variant text-[11px] leading-relaxed">
-                    Penerbitan formulir mutasi resmi dengan tombol persetujuan digital (Approval Button) oleh pihak Penyerah &amp; Penerima.
-                </p>
-            </div>
-
-            <div class="p-3.5 rounded-lg border border-border-light bg-surface-container/30">
-                <div class="flex items-center justify-between mb-1">
-                    <span class="font-mono font-bold text-emerald-700 text-[10px]">TAHAP 4</span>
-                    <span class="font-mono text-[10px] text-on-surface-variant">Inventaris</span>
-                </div>
-                <h5 class="font-semibold text-on-surface mb-0.5">Eksekusi &amp; Arsip Berita Acara</h5>
-                <p class="text-on-surface-variant text-[11px] leading-relaxed">
-                    Pemindahan kepemilikan aset secara definitif dan arsip PDF Berita Acara yang terkunci permanen.
-                </p>
-            </div>
-        </div>
-
-        <div class="pt-3 border-t border-border-light flex justify-end">
-            <button type="button" onclick="closeSopModal()" class="px-4 py-2 rounded-lg bg-surface-container text-xs font-semibold text-on-surface hover:bg-surface-container-high transition-colors">
-                Tutup SOP
-            </button>
-        </div>
-    </div>
 </div>
 
 @push('scripts')
 <script>
     function openGuideModal() {
-        const modal = document.getElementById('guide-modal');
-        if (modal) modal.classList.remove('hidden');
-    }
 
-    function closeGuideModal() {
-        const modal = document.getElementById('guide-modal');
-        if (modal) modal.classList.add('hidden');
+        if (typeof openSystemGuideModal === 'function') {
+            openSystemGuideModal('kode-aset');
+        }
     }
 
     function openSopModal() {
-        const modal = document.getElementById('sop-modal');
-        if (modal) modal.classList.remove('hidden');
-    }
-
-    function closeSopModal() {
-        const modal = document.getElementById('sop-modal');
-        if (modal) modal.classList.add('hidden');
+        if (typeof openSystemGuideModal === 'function') {
+            openSystemGuideModal('mutasi-aset');
+        }
     }
 
     function copyTemplateText() {
-        const textElement = document.getElementById('template-text');
-        if (!textElement) return;
-
-        const text = textElement.innerText || textElement.textContent;
-        navigator.clipboard.writeText(text).then(() => {
-            if (typeof window.showToast === 'function') {
-                window.showToast('Format pesan berhasil disalin ke clipboard!', 'success');
-            } else {
-                alert('Format pesan berhasil disalin!');
-            }
-        }).catch(() => {
-            alert('Silakan salin teks secara manual.');
-        });
+        if (typeof copySystemTemplateText === 'function') {
+            copySystemTemplateText();
+        }
     }
+
+
 
     function calculateAssetCategory(val) {
         const resultEl = document.getElementById('quick-calc-result');

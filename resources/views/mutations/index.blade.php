@@ -13,15 +13,54 @@
                 Siklus persetujuan digital resmi pemindahan aset antar-departemen di lingkungan WBI.
             </p>
         </div>
-        <a href="{{ route('mutations.create') }}"
-           class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-white text-xs sm:text-sm font-semibold
-                  hover:bg-primary-light transition-all duration-200 active:scale-[0.98] shadow-xs self-start sm:self-auto">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Terbitkan Form Mutasi
-        </a>
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="openSystemGuideModal('mutasi-aset')"
+                    class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-border-light bg-surface-white text-xs font-semibold text-on-surface hover:bg-surface-container transition-colors shadow-2xs">
+                <svg class="w-4 h-4 text-primary-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Panduan Alur Mutasi
+            </button>
+            <a href="{{ route('mutations.create') }}"
+               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-xs sm:text-sm font-bold
+                      hover:bg-primary-light transition-all duration-200 active:scale-[0.98] shadow-xs">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Ajukan Mutasi Baru
+            </a>
+        </div>
     </div>
+
+    {{-- Workflow Mini Guide Ribbon --}}
+    <div class="p-3.5 rounded-xl bg-surface-white border border-border-light shadow-2xs">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+            <div class="flex items-center gap-2.5 p-2 rounded-lg bg-surface-container/40">
+                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-800 font-mono font-bold flex items-center justify-center shrink-0 text-xs">1</span>
+                <div>
+                    <p class="font-bold text-on-surface text-[11px]">Penerbitan &amp; TTD Pengirim</p>
+                    <p class="text-[10px] text-on-surface-variant">Unit pengirim ajukan barang</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2.5 p-2 rounded-lg bg-amber-50/70 border border-amber-200/60">
+                <span class="w-6 h-6 rounded-full bg-amber-200 text-amber-900 font-mono font-bold flex items-center justify-center shrink-0 text-xs">2</span>
+                <div>
+                    <p class="font-bold text-amber-950 text-[11px]">Approval Penerima</p>
+                    <p class="text-[10px] text-amber-800">Unit penerima verifikasi &amp; setujui</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2.5 p-2 rounded-lg bg-teal-50/70 border border-teal-200/60">
+                <span class="w-6 h-6 rounded-full bg-teal-200 text-teal-900 font-mono font-bold flex items-center justify-center shrink-0 text-xs">3</span>
+                <div>
+                    <p class="font-bold text-teal-950 text-[11px]">Eksekusi &amp; Arsip Inventaris</p>
+                    <p class="text-[10px] text-teal-800">Inventaris pindahkan data &amp; arsip</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     {{-- Tabs Lingkup / Filter Cepat Status --}}
     <div class="flex items-center gap-2 border-b border-border-light pb-2 overflow-x-auto whitespace-nowrap scrollbar-none">

@@ -13,17 +13,49 @@
                 Pencatatan resmi barang inventaris di seluruh lingkungan WBI.
             </p>
         </div>
-        @if(auth()->user()->hasRole('finance', 'admin'))
-        <a href="{{ route('assets.create') }}"
-           class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-on-primary text-xs sm:text-sm font-semibold
-                  hover:bg-primary-light transition-all duration-200 active:scale-[0.98] shadow-xs self-start sm:self-auto">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Registrasi Aset Baru
-        </a>
-        @endif
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="openSystemGuideModal('kode-aset')"
+                    class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-border-light bg-surface-white text-xs font-semibold text-on-surface hover:bg-surface-container transition-colors shadow-2xs">
+                <svg class="w-4 h-4 text-primary-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Panduan Kode Aset
+            </button>
+
+            @if(auth()->user()->hasRole('finance', 'admin'))
+            <a href="{{ route('assets.create') }}"
+               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-on-primary text-xs sm:text-sm font-bold
+                      hover:bg-primary-light transition-all duration-200 active:scale-[0.98] shadow-xs">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Registrasi Aset Baru
+            </a>
+            @endif
+        </div>
     </div>
+
+    {{-- Guidance Ribbon --}}
+    <div class="p-3.5 rounded-xl bg-surface-white border border-border-light shadow-2xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="flex items-start gap-2.5 p-2.5 rounded-lg bg-emerald-50/60 border border-emerald-200/60">
+                <span class="w-2 h-2 rounded-full bg-emerald-600 shrink-0 mt-1.5"></span>
+                <div>
+                    <p class="font-bold text-emerald-950 text-[11px]">Syarat Nilai Aset (&ge; Rp 500.000)</p>
+                    <p class="text-[10px] text-emerald-900 leading-relaxed">Hanya barang &ge; Rp 500rb yang dicatat sebagai aset inventaris resmi. Barang di bawah 500rb dicatat sebagai beban operasional.</p>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-50 border border-slate-200">
+                <span class="w-2 h-2 rounded-full bg-slate-600 shrink-0 mt-1.5"></span>
+                <div>
+                    <p class="font-bold text-slate-900 text-[11px]">Penampungan Gudang Inventaris [GDG-INV]</p>
+                    <p class="text-[10px] text-slate-700 leading-relaxed">Aset baru diinput Keuangan otomatis masuk Gudang Inventaris sebelum disalurkan Bagian Inventaris ke unit kerja.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     {{-- Tabs Lingkup (Khusus Pengguna dengan Departemen) --}}
     @if($userDepartment)

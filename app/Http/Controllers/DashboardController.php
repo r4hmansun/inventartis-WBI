@@ -78,6 +78,8 @@ class DashboardController extends Controller
         $deptValuation = 0.0;
         $deptAssets = collect();
         $deptMutations = collect();
+        $waitingApprovalMutationsCount = 0;
+        $waitingApprovalMutations = collect();
 
         if ($user->department_id) {
             $deptTotalAssets = Asset::where('current_department_id', $user->department_id)->count();
@@ -98,7 +100,24 @@ class DashboardController extends Controller
                 ->latest()
                 ->take(5)
                 ->get();
+
+            $waitingApprovalMutations = MutationForm::with(['fromDepartment', 'sender', 'items.asset'])
+                ->where('to_department_id', $user->department_id)
+                ->where('status', 'waiting_receiver')
+                ->latest()
+                ->get();
+            $waitingApprovalMutationsCount = $waitingApprovalMutations->count();
         }
+
+        // Inventory & Finance specific action metrics
+        $gudangDept = Department::where('code', 'GDG-INV')->first();
+        $storageAssetsCount = $gudangDept ? Asset::where('current_department_id', $gudangDept->id)->where('status', 'in_storage')->count() : 0;
+        $storageAssets = $gudangDept ? Asset::where('current_department_id', $gudangDept->id)->where('status', 'in_storage')->latest()->take(5)->get() : collect();
+        $readyExecutionMutationsList = MutationForm::with(['fromDepartment', 'toDepartment', 'sender', 'receiver', 'items.asset'])
+            ->where('status', 'ready_for_execution')
+            ->latest()
+            ->take(5)
+            ->get();
 
         // 5 Executive & Operational Charts Data
         // 1. Chart: Distribusi Status Aset (Doughnut)
@@ -174,6 +193,11 @@ class DashboardController extends Controller
             'deptValuation',
             'deptAssets',
             'deptMutations',
+            'waitingApprovalMutationsCount',
+            'waitingApprovalMutations',
+            'storageAssetsCount',
+            'storageAssets',
+            'readyExecutionMutationsList',
             'chartStatus',
             'chartValuations',
             'chartMonthlyTrends',
