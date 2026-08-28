@@ -45,16 +45,6 @@
 
                 {{-- User Profile & Actions --}}
                 <div class="flex items-center gap-2.5">
-                    {{-- Global Guide Modal Trigger --}}
-                    <button type="button" onclick="openSystemGuideModal()"
-                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border-light bg-surface-white text-xs font-semibold text-primary-light hover:text-primary hover:bg-surface-container transition-all shadow-2xs cursor-pointer"
-                            title="Buka Panduan Alur Kode Aset &amp; Mutasi">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                        </svg>
-                        <span class="hidden sm:inline">Panduan Alur</span>
-                    </button>
-
                     <div class="flex items-center gap-2 pl-1.5 pr-2 py-1 rounded-full bg-surface-container/60 border border-border-light hover:bg-surface-container/90 transition-colors {{ request()->routeIs('profile.*') ? 'ring-2 ring-primary/20 bg-surface-container' : '' }}">
                         <a href="{{ route('profile.index') }}" 
                            class="flex items-center gap-2.5 text-left focus:outline-none cursor-pointer group"
@@ -89,21 +79,6 @@
                     </div>
                 </div>
             </header>
-
-            {{-- Flash Messages --}}
-            @if(session('success'))
-                <div class="mx-4 sm:mx-6 mt-4 px-4 py-3 rounded-md bg-primary-surface text-primary-light text-sm font-medium flex items-center gap-2" role="alert">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="mx-4 sm:mx-6 mt-4 px-4 py-3 rounded-md bg-red-50 text-danger text-sm font-medium flex items-center gap-2" role="alert">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    {{ session('error') }}
-                </div>
-            @endif
 
             {{-- Page Content --}}
             <main class="flex-1 p-4 sm:p-6 min-w-0 w-full max-w-full">

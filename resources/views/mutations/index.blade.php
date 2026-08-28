@@ -249,7 +249,8 @@
                                 <div class="pt-2">
                                     <a href="{{ route('mutations.create') }}"
                                        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-white text-xs font-semibold hover:bg-primary-light transition-colors shadow-2xs">
-                                        + Terbitkan Form Mutasi
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                        Terbitkan Form Mutasi
                                     </a>
                                 </div>
                             </div>

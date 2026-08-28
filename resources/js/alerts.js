@@ -3,6 +3,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 
 // Custom WBI Mixin / Theme Defaults matching DESIGN.md
 const WbiSwal = Swal.mixin({
+    showDenyButton: false,
     customClass: {
         popup: 'wbi-swal-popup',
         title: 'wbi-swal-title',
@@ -130,6 +131,7 @@ window.confirmAction = function({
         text,
         icon,
         showCancelButton: true,
+        showDenyButton: false,
         confirmButtonText,
         cancelButtonText,
         reverseButtons: true,
@@ -139,6 +141,7 @@ window.confirmAction = function({
             htmlContainer: 'wbi-swal-text',
             confirmButton: `wbi-swal-btn ${isDanger ? 'wbi-swal-btn-danger' : 'wbi-swal-btn-primary'}`,
             cancelButton: 'wbi-swal-btn wbi-swal-btn-cancel',
+            denyButton: 'wbi-swal-btn wbi-swal-btn-danger',
         }
     }).then((result) => result.isConfirmed);
 };
