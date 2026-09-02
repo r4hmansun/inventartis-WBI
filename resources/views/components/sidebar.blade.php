@@ -1,34 +1,26 @@
 {{-- Sidebar Navigation Component --}}
 <aside id="sidebar"
-       class="fixed top-0 left-0 z-50 w-[260px] h-full bg-primary text-on-primary flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0">
-
-    {{-- Logo / Brand --}}
-    <div class="px-5 py-4 border-b border-white/10">
-        <a href="{{ route('dashboard') }}" class="block">
-            <div class="bg-white rounded-lg p-2 flex items-center justify-center shadow-xs">
-                <img src="{{ asset('images/logo.png') }}" alt="Wilmar Business Indonesia Polytechnic" class="h-9 w-auto object-contain">
-            </div>
-            <div class="mt-2.5 px-1 flex items-center justify-between">
-                <span class="font-display text-xs font-bold tracking-wider text-white">WBI INVENTARIS</span>
-                <span class="text-[10px] font-mono text-secondary-light uppercase font-semibold">Asset System</span>
-            </div>
-        </a>
-    </div>
+       class="fixed top-16 left-0 z-35 w-[260px] h-[calc(100vh-4rem)] bg-primary text-on-primary flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 border-r border-primary-light/30 shadow-xs">
 
     {{-- Navigation Links --}}
-    <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-        {{-- Dashboard --}}
-        <a href="{{ route('dashboard') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors
-                  {{ request()->routeIs('dashboard') ? 'bg-white/15 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-            </svg>
-            Dashboard
-        </a>
+    <nav class="flex-1 overflow-y-auto px-3 pt-6 pb-4 space-y-1">
+        {{-- Section: Dashboard / Menu Utama --}}
+        <div>
+            <p class="px-3 text-[10px] font-mono font-semibold uppercase tracking-widest text-white/40 mb-2">
+                Dashboard
+            </p>
+            <a href="{{ route('dashboard') }}"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors
+                      {{ request()->routeIs('dashboard') ? 'bg-white/15 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+        </div>
 
         {{-- Section: Aset (Accessible to all authenticated users) --}}
-        <div class="pt-4">
+        <div class="pt-5">
             <p class="px-3 text-[10px] font-mono font-semibold uppercase tracking-widest text-white/40 mb-2">
                 {{ auth()->user()->hasRole('user') ? 'Inventaris & Barang' : 'Manajemen Aset' }}
             </p>
@@ -89,7 +81,7 @@
 
         {{-- Section: Admin --}}
         @if(auth()->user()->isAdmin())
-        <div class="pt-4">
+        <div class="pt-5">
             <p class="px-3 text-[10px] font-mono font-semibold uppercase tracking-widest text-white/40 mb-2">Master Data</p>
 
             <a href="{{ route('departments.index') }}"
@@ -98,22 +90,24 @@
                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                 </svg>
-                Departemen
+                <span>Departemen</span>
             </a>
 
+            @if(auth()->user()->isSuperAdmin())
             <a href="{{ route('users.index') }}"
                class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors
                       {{ request()->routeIs('users.*') ? 'bg-white/15 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                 </svg>
-                Pengguna
+                <span>Pengguna</span>
             </a>
+            @endif
         </div>
         @endif
 
         {{-- Section: Bantuan / SOP --}}
-        <div class="pt-4">
+        <div class="pt-5">
             <p class="px-3 text-[10px] font-mono font-semibold uppercase tracking-widest text-white/40 mb-2">Bantuan &amp; SOP</p>
 
             <button type="button" onclick="openSystemGuideModal()"
@@ -126,18 +120,17 @@
         </div>
     </nav>
 
-    {{-- Sidebar Footer / Logout Action --}}
+    {{-- Sidebar Footer: User Info --}}
     <div class="p-3 border-t border-white/10 mt-auto">
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit"
-                    class="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-lg bg-white/10 hover:bg-rose-600 text-white text-xs font-semibold transition-all duration-200 cursor-pointer shadow-xs border border-white/10 hover:border-rose-600 active:scale-[0.99] group"
-                    title="Keluar dari Akun">
-                <svg class="w-4 h-4 text-white/70 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                </svg>
-                <span>Keluar (Logout)</span>
-            </button>
-        </form>
+        <a href="{{ route('profile.index') }}"
+           class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors group">
+            <div class="w-7 h-7 rounded-full bg-white/20 text-white flex items-center justify-center text-xs font-bold shrink-0">
+                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+            </div>
+            <div class="min-w-0">
+                <p class="text-xs font-semibold text-white truncate leading-tight">{{ auth()->user()->name }}</p>
+                <p class="text-[10px] font-mono text-white/50 leading-tight">{{ auth()->user()->role_label }}</p>
+            </div>
+        </a>
     </div>
 </aside>

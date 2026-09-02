@@ -76,13 +76,6 @@ class AssetController extends Controller
             'description' => ['nullable', 'string'],
         ]);
 
-        // BR-01: Validate capitalization threshold
-        if ($validated['purchase_price'] < 500000) {
-            return back()
-                ->withErrors(['purchase_price' => 'Nilai barang di bawah Rp 500.000. Barang tidak dapat didaftarkan sebagai Aset Inventaris (Non-Asset).'])
-                ->withInput();
-        }
-
         // BR-02: Auto-assign to Gudang Inventaris
         $gudang = Department::where('code', 'GDG-INV')->firstOrFail();
 

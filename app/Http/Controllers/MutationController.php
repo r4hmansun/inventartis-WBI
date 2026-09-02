@@ -125,9 +125,15 @@ class MutationController extends Controller
                 ?? Department::first();
         }
 
-        // Available assets belonging to source department (status in_storage or active)
+        // Aset yang sedang terkunci dalam mutasi aktif
+        $lockedAssetIds = \App\Models\MutationItem::whereHas('mutationForm', function ($q) {
+            $q->whereIn('status', ['waiting_receiver', 'ready_for_execution']);
+        })->pluck('asset_id')->toArray();
+
+        // Available assets belonging to source department (status in_storage or active), excluding locked
         $availableAssets = Asset::where('current_department_id', $fromDepartment->id)
             ->whereIn('status', ['active', 'in_storage'])
+            ->whereNotIn('id', $lockedAssetIds)
             ->orderBy('name')
             ->get();
 
@@ -184,19 +190,24 @@ class MutationController extends Controller
             return back()->withErrors(['from_department_id' => 'Anda hanya berhak mengajukan mutasi dari unit kerja Anda.'])->withInput();
         }
 
-        // Validate assets belong to from_department_id
+        // Validate assets belong to from_department_id and are not locked in another active mutation
+        $lockedAssetIds = \App\Models\MutationItem::whereHas('mutationForm', function ($q) {
+            $q->whereIn('status', ['waiting_receiver', 'ready_for_execution']);
+        })->pluck('asset_id')->toArray();
+
         $validAssets = Asset::where('current_department_id', $validated['from_department_id'])
             ->whereIn('id', $validated['asset_ids'])
             ->whereIn('status', ['active', 'in_storage'])
+            ->whereNotIn('id', $lockedAssetIds)
             ->get();
 
         if ($validAssets->count() !== count($validated['asset_ids'])) {
-            return back()->withErrors(['asset_ids' => 'Salah satu aset yang dipilih tidak valid atau tidak berada di unit asal.'])->withInput();
+            return back()->withErrors(['asset_ids' => 'Salah satu aset yang dipilih tidak valid, tidak berada di unit asal, atau sedang dalam proses mutasi lain.'])->withInput();
         }
 
-        $formNumber = MutationForm::generateFormNumber();
+        $mutation = DB::transaction(function () use ($validated, $user, $validAssets) {
+            $formNumber = MutationForm::generateFormNumber();
 
-        $mutation = DB::transaction(function () use ($validated, $user, $formNumber, $validAssets) {
             $mutationForm = MutationForm::create([
                 'form_number' => $formNumber,
                 'from_department_id' => $validated['from_department_id'],
@@ -325,7 +336,7 @@ class MutationController extends Controller
             abort(403, 'Hanya Bagian Inventaris atau Admin yang berhak mengeksekusi mutasi aset.');
         }
 
-        if ($mutation->status !== 'ready_for_execution') {
+        if ($mutation->status !== 'ready_for_execution' || !$mutation->hasDualApproval()) {
             return back()->with('error', 'Mutasi belum siap dieksekusi. Memerlukan persetujuan ganda dari penyerah dan penerima.');
         }
 
