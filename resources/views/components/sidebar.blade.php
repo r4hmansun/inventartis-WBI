@@ -22,7 +22,7 @@
         {{-- Section: Aset (Accessible to all authenticated users) --}}
         <div class="pt-5">
             <p class="px-3 text-[10px] font-mono font-semibold uppercase tracking-widest text-white/40 mb-2">
-                {{ auth()->user()->hasRole('user') ? 'Inventaris & Barang' : 'Manajemen Aset' }}
+                Manajemen Aset
             </p>
 
             @if(auth()->user()->hasRole('user') && auth()->user()->department_id)
@@ -43,7 +43,7 @@
                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                 </svg>
-                <span>{{ auth()->user()->hasRole('user') ? 'Semua Aset Kampus' : 'Daftar Aset' }}</span>
+                <span>Daftar Aset</span>
             </a>
 
             <a href="{{ route('mutations.index') }}"
