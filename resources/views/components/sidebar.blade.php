@@ -119,18 +119,4 @@
             </button>
         </div>
     </nav>
-
-    {{-- Sidebar Footer: User Info --}}
-    <div class="p-3 border-t border-white/10 mt-auto">
-        <a href="{{ route('profile.index') }}"
-           class="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors group">
-            <div class="w-7 h-7 rounded-full bg-white/20 text-white flex items-center justify-center text-xs font-bold shrink-0">
-                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-            </div>
-            <div class="min-w-0">
-                <p class="text-xs font-semibold text-white truncate leading-tight">{{ auth()->user()->name }}</p>
-                <p class="text-[10px] font-mono text-white/50 leading-tight">{{ auth()->user()->role_label }}</p>
-            </div>
-        </a>
-    </div>
 </aside>
