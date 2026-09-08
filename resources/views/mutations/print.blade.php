@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAST Mutasi Aset | {{ $mutation->form_number }}</title>
+    <title>Berita Acara Mutasi Aset | {{ $mutation->form_number }}</title>
     @vite(['resources/css/app.css'])
     <style>
         @page {
@@ -153,7 +153,7 @@
         {{-- 2. Judul & Nomor Surat --}}
         <div class="text-center my-3">
             <h2 class="text-[12pt] font-bold text-black uppercase underline tracking-wide">
-                Berita Acara Serah Terima (BAST) Mutasi Aset
+                Berita Acara Serah Terima Mutasi Aset
             </h2>
             <p class="text-[10pt] font-mono mt-0.5 font-bold">
                 Nomor: {{ $mutation->form_number }}

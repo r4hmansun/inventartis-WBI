@@ -85,11 +85,11 @@
                         @elseif($isReady)
                             <span class="w-2 h-2 rounded-full bg-teal-600 animate-pulse"></span>
                         @endif
-                        3. Bagian Inventaris: Arsip Form
+                        3. Bagian Inventaris: Arsip Berita Acara
                     </div>
-                    <p class="font-semibold text-on-surface">Pemindahan Aset &amp; Arsip Form</p>
+                    <p class="font-semibold text-on-surface">Pemindahan Aset &amp; Arsip Berita Acara</p>
                     <p class="text-[10px] text-on-surface-variant font-mono mt-0.5">
-                        {{ $isArchived ? 'SELESAI (Form Diarsipkan)' : ($isReady ? 'Siap Eksekusi & Arsip' : 'Menunggu Approval Unit') }}
+                        {{ $isArchived ? 'SELESAI (Berita Acara Diarsipkan)' : ($isReady ? 'Siap Eksekusi & Arsip' : 'Menunggu Approval Unit') }}
                     </p>
                 </div>
             </div>
@@ -335,9 +335,9 @@
                 {{-- Inventory Execution Action Box --}}
                 <div class="p-4 rounded-lg bg-teal-50/70 border border-teal-300 space-y-3">
                     <div>
-                        <h4 class="text-xs font-bold text-teal-950">Pemindahan Aset &amp; Arsip Form</h4>
+                        <h4 class="text-xs font-bold text-teal-950">Pemindahan Aset &amp; Arsip Berita Acara</h4>
                         <p class="text-[11px] text-teal-800 mt-0.5 leading-relaxed">
-                            Pihak Penyerah &amp; Penerima telah menyetujui mutasi ini. Klik tombol di bawah untuk memindahkan aset dan mengarsipkan formulir secara permanen.
+                            Pihak Penyerah &amp; Penerima telah menyetujui mutasi ini. Klik tombol di bawah untuk memindahkan aset dan mengarsipkan berita acara secara permanen.
                         </p>
                     </div>
 
@@ -347,15 +347,15 @@
                                 onclick="confirmExecuteMutation()"
                                 class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary-light transition-all shadow-xs cursor-pointer">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            Bagian Inventaris: Pindahkan Aset &amp; Arsip Form
+                            Bagian Inventaris: Pindahkan Aset &amp; Arsip Berita Acara
                         </button>
                     </form>
                 </div>
                 @else
                 <div class="p-3.5 rounded-lg bg-stone-50 border border-stone-200 text-xs text-on-surface-variant space-y-1">
-                    <p class="font-semibold text-on-surface">Tahap Terakhir: Arsip Form</p>
+                    <p class="font-semibold text-on-surface">Tahap Terakhir: Arsip Berita Acara</p>
                     <p class="text-[11px]">
-                        Tombol Arsip Form akan aktif untuk Bagian Inventaris setelah persetujuan dari Bagian Terkait / Penerima selesai.
+                        Tombol Arsip Berita Acara akan aktif untuk Bagian Inventaris setelah persetujuan dari Bagian Terkait / Penerima selesai.
                     </p>
                 </div>
                 @endif

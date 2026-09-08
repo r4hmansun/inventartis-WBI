@@ -79,7 +79,7 @@
             <div class="space-y-1">
                 <p class="text-sm font-semibold text-slate-500">Jumlah Barang di Unit Anda</p>
                 <p class="text-3xl sm:text-4xl font-bold font-mono text-slate-900">
-                    {{ $deptTotalAssets }} <span class="text-base font-sans font-normal text-slate-500">Unit</span>
+                    {{ $deptTotalAssets }}
                 </p>
                 <p class="text-sm text-slate-600 pt-1">
                     <span class="text-emerald-700 font-semibold">{{ $deptActiveAssets }} Kondisi Baik</span> &bull; 
@@ -217,7 +217,7 @@
         <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
             <div class="space-y-1">
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Aset Terdaftar</p>
-                <h3 class="text-3xl font-bold text-slate-900 font-mono">{{ number_format($stats['total_assets']) }} <span class="text-sm font-normal text-slate-500">Unit</span></h3>
+                <h3 class="text-3xl font-bold text-slate-900 font-mono">{{ number_format($stats['total_assets']) }}</h3>
                 <p class="text-xs text-slate-600 font-mono">Valuasi: <strong class="text-slate-900">Rp {{ number_format($stats['total_valuation'], 0, ',', '.') }}</strong></p>
             </div>
             <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
@@ -228,7 +228,7 @@
         <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
             <div class="space-y-1">
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Aset Baru di Gudang</p>
-                <h3 class="text-3xl font-bold text-slate-900 font-mono">{{ number_format($stats['in_storage']) }} <span class="text-sm font-normal text-slate-500">Unit</span></h3>
+                <h3 class="text-3xl font-bold text-slate-900 font-mono">{{ number_format($stats['in_storage']) }}</h3>
                 <p class="text-xs text-slate-600">Menunggu penyaluran oleh Inventaris</p>
             </div>
             <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold">
@@ -375,7 +375,7 @@
                     Pusat Distribusi Gudang &amp; Eksekusi Mutasi
                 </h2>
                 <p class="text-sm text-teal-100 max-w-2xl leading-relaxed">
-                    Menyalurkan aset dari Gudang ke departemen penanggung jawab, mengeksekusi mutasi yang telah disetujui ganda, dan mengarsipkan Berita Acara (BAST).
+                    Menyalurkan aset dari Gudang ke departemen penanggung jawab, mengeksekusi mutasi yang telah disetujui, dan mengarsipkan Berita Acara resmi.
                 </p>
             </div>
             <div class="flex flex-wrap items-center gap-3 shrink-0">
@@ -402,7 +402,7 @@
         <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
             <div class="space-y-1">
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Aset di Gudang Inventaris</p>
-                <h3 class="text-3xl font-bold text-slate-900 font-mono">{{ number_format($stats['in_storage']) }} <span class="text-sm font-normal text-slate-500">Unit</span></h3>
+                <h3 class="text-3xl font-bold text-slate-900 font-mono">{{ number_format($stats['in_storage']) }}</h3>
                 <p class="text-xs text-slate-600">Siap disalurkan ke unit penanggung jawab</p>
             </div>
             <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold">
@@ -413,8 +413,8 @@
         <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
             <div class="space-y-1">
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Mutasi Siap Eksekusi</p>
-                <h3 class="text-3xl font-bold text-amber-700 font-mono">{{ number_format($stats['ready_execution']) }} <span class="text-sm font-normal text-slate-500">Form</span></h3>
-                <p class="text-xs text-slate-600">Dual-approval selesai &bull; Menunggu eksekusi</p>
+                <h3 class="text-3xl font-bold text-amber-700 font-mono">{{ number_format($stats['ready_execution']) }}</h3>
+                <p class="text-xs text-slate-600">Persetujuan selesai &bull; Menunggu eksekusi</p>
             </div>
             <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center font-bold">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -424,7 +424,7 @@
         <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-between">
             <div class="space-y-1">
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Arsip Berita Acara</p>
-                <h3 class="text-3xl font-bold text-emerald-800 font-mono">{{ number_format($stats['archived_mutations']) }} <span class="text-sm font-normal text-slate-500">BAST</span></h3>
+                <h3 class="text-3xl font-bold text-emerald-800 font-mono">{{ number_format($stats['archived_mutations']) }}</h3>
                 <p class="text-xs text-slate-600">Mutasi resmi selesai dan tersimpan</p>
             </div>
             <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
@@ -466,10 +466,10 @@
             <div class="p-4 rounded-xl bg-white border border-slate-200 space-y-1">
                 <div class="flex items-center gap-2 font-bold text-slate-900">
                     <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-800 text-xs flex items-center justify-center font-bold">3</span>
-                    <span>Eksekusi &amp; Arsip BAST</span>
+                    <span>Eksekusi &amp; Arsip Berita Acara</span>
                 </div>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    Inventaris melakukan serah terima fisik, klik *Eksekusi Mutasi*, dan mengunduh/mencetak Berita Acara sah (BAST).
+                <p class="text-xs text-slate-500">
+                    Inventaris melakukan serah terima fisik, klik *Eksekusi Mutasi*, dan mengunduh/mencetak Berita Acara resmi.
                 </p>
             </div>
         </div>
@@ -591,7 +591,6 @@
         @include('components.stat-card', [
             'title' => 'Total Aset Terdata',
             'value' => number_format($stats['total_assets']),
-            'unit' => 'Unit',
             'badge' => 'Terdaftar',
             'badgeType' => 'teal',
             'subvalue' => 'Nilai: <strong class="text-on-surface font-mono">Rp ' . number_format($stats['total_valuation'], 0, ',', '.') . '</strong>',
@@ -602,7 +601,6 @@
         @include('components.stat-card', [
             'title' => 'Aset Operasional',
             'value' => number_format($stats['active_assets']),
-            'unit' => 'Unit',
             'badge' => ($stats['total_assets'] > 0 ? round(($stats['active_assets'] / $stats['total_assets']) * 100) : 0) . '% Aktif',
             'badgeType' => 'success',
             'subvalue' => 'Aktif di departemen pengguna',
@@ -613,8 +611,7 @@
         @include('components.stat-card', [
             'title' => 'Gudang Inventaris',
             'value' => number_format($stats['in_storage']),
-            'unit' => 'Unit',
-            'badge' => 'Pool Cadangan',
+            'badge' => 'Cadangan',
             'badgeType' => 'slate',
             'subvalue' => 'Siap disalurkan ke unit',
             'icon' => '<svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>'
@@ -624,8 +621,7 @@
         @include('components.stat-card', [
             'title' => 'Siklus Mutasi Aset',
             'value' => number_format($stats['pending_mutations']),
-            'unit' => 'Form',
-            'badge' => 'Dual-Approval',
+            'badge' => 'Dalam Proses',
             'badgeType' => ($stats['pending_mutations'] > 0 ? 'warning' : 'neutral'),
             'subvalue' => '<span>' . $stats['waiting_receiver'] . ' Tunggu Approval</span> &bull; <span>' . $stats['ready_execution'] . ' Eksekusi</span>',
             'icon' => '<svg class="w-4 h-4 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>'
@@ -811,13 +807,13 @@
                 {{-- Trend Footer --}}
                 <div id="mutationTrendFooter" class="pt-2.5 mt-2 border-t border-border-light text-xs text-on-surface-variant flex items-center justify-between font-mono">
                     <span>Total Formulir Seluruh Siklus:</span>
-                    <span class="font-bold text-primary">{{ $stats['pending_mutations'] + $stats['archived_mutations'] }} Form</span>
+                    <span class="font-bold text-primary">{{ $stats['pending_mutations'] + $stats['archived_mutations'] }}</span>
                 </div>
 
                 {{-- Receivers Footer --}}
                 <div id="mutationReceiverFooter" class="pt-2.5 mt-2 border-t border-border-light text-xs text-on-surface-variant flex items-center justify-between font-mono hidden">
-                    <span>Total Arsip Berita Acara Sah:</span>
-                    <span class="font-bold text-emerald-700">{{ $stats['archived_mutations'] }} BAST</span>
+                    <span>Total Arsip Berita Acara:</span>
+                    <span class="font-bold text-emerald-700">{{ $stats['archived_mutations'] }}</span>
                 </div>
             </div>
         </div>

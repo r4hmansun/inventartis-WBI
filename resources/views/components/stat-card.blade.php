@@ -2,7 +2,7 @@
 @props([
     'title',
     'value',
-    'unit' => 'Unit',
+    'unit' => null,
     'subvalue' => null,
     'badge' => null,
     'badgeType' => 'neutral',
