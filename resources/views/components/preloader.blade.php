@@ -1,148 +1,242 @@
 {{-- ============================================================
-     WBI Asset Management — Professional Page Preloader & Loader
+     WBI Asset Management — Modern Skeleton Loading System
      Design System Compliant (DESIGN.md)
+     - Replaces generic modal/spinners with realistic Skeleton UI
+     - Shimmering placeholders for header, stats, and data tables
+     - Top slim progress bar + subtle floating status pill
      ============================================================ --}}
 
-<!-- 1. Top Slim Navigation Progress Bar (Pre-load for transitions & AJAX) -->
+<!-- 1. Top Slim Navigation Progress Bar -->
 <div id="wbi-topbar-loader" 
      class="fixed top-0 left-0 h-[2.5px] w-0 z-[100000] opacity-0 transition-all duration-200 pointer-events-none"
      style="background: linear-gradient(90deg, #002a22 0%, #134137 60%, #ffc569 100%); box-shadow: 0 0 8px rgba(0, 42, 34, 0.35), 0 0 3px #ffc569;">
 </div>
 
-<!-- 2. Fullscreen Initial Page Splash Preloader -->
-<div id="wbi-preloader" 
-     class="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#ffffff] select-none transition-all duration-350 ease-out"
-     aria-label="Memuat Halaman"
-     role="status">
+<!-- 2. Modern Content Skeleton Screen (Positioned in main content canvas) -->
+<div id="wbi-skeleton-loader" 
+     class="fixed top-16 right-0 bottom-0 left-0 lg:left-[260px] z-30 bg-neutral-bg hidden opacity-0 pointer-events-none transition-opacity duration-200 overflow-y-auto p-4 sm:p-6 select-none"
+     role="status"
+     aria-live="polite"
+     aria-label="Memuat konten...">
 
-    <!-- Ambient Subtle Glow Disc -->
-    <div class="absolute w-72 h-72 rounded-full bg-[#bdecde]/25 blur-3xl pointer-events-none -z-10 animate-pulse"></div>
-
-    <div class="flex flex-col items-center text-center px-4 max-w-sm">
+    <div class="max-w-7xl mx-auto space-y-6 w-full">
         
-        <!-- Logo Card Disc with Subtle Breathing Animation -->
-        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white border border-[#E5E7EB] p-3 sm:p-4 flex items-center justify-center shadow-sm wbi-logo-pulse">
-            <img src="{{ asset('images/logo.png') }}" alt="WBI Logo" class="h-full w-auto object-contain">
+        <!-- Header & Breadcrumb Skeleton -->
+        <div class="bg-surface-white rounded-2xl border border-border-light p-6 sm:p-8 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 relative overflow-hidden">
+            <div class="space-y-3 w-full max-w-lg">
+                <div class="flex items-center gap-2">
+                    <div class="w-16 h-5 rounded-full wbi-skeleton"></div>
+                    <div class="w-32 h-4 rounded-md wbi-skeleton"></div>
+                </div>
+                <div class="w-64 sm:w-80 h-8 rounded-lg wbi-skeleton"></div>
+                <div class="w-full max-w-md h-4 rounded-md wbi-skeleton"></div>
+            </div>
+
+            <!-- Action Button & Floating Micro-Status Pill -->
+            <div class="flex items-center gap-3 shrink-0">
+                <div class="w-36 h-10 rounded-xl wbi-skeleton hidden sm:block"></div>
+                <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface-container/80 border border-border-light text-xs font-medium text-on-surface-variant shadow-2xs">
+                    <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+                    <span id="wbi-skeleton-text" class="font-sans">Memuat data...</span>
+                </div>
+            </div>
         </div>
 
-        <!-- Brand Titles -->
-        <div class="mt-4 mb-5">
-            <h2 class="font-display text-base sm:text-lg font-bold text-[#1a1c1b] tracking-tight leading-tight">
-                WBI Inventaris
-            </h2>
-            <p class="text-xs text-[#525c59] font-body mt-0.5">
-                Sistem Manajemen &amp; Mutasi Aset
-            </p>
+        <!-- 3 KPI Metric Cards Skeleton -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <!-- Card 1 -->
+            <div class="bg-surface-white rounded-2xl border border-border-light p-6 shadow-xs flex items-center justify-between relative overflow-hidden">
+                <div class="space-y-2.5 flex-1 pr-4">
+                    <div class="w-28 h-3.5 rounded wbi-skeleton"></div>
+                    <div class="w-20 h-9 rounded-md wbi-skeleton"></div>
+                    <div class="w-36 h-3 rounded wbi-skeleton"></div>
+                </div>
+                <div class="w-14 h-14 rounded-2xl wbi-skeleton shrink-0"></div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="bg-surface-white rounded-2xl border border-border-light p-6 shadow-xs flex items-center justify-between relative overflow-hidden">
+                <div class="space-y-2.5 flex-1 pr-4">
+                    <div class="w-32 h-3.5 rounded wbi-skeleton"></div>
+                    <div class="w-28 h-9 rounded-md wbi-skeleton"></div>
+                    <div class="w-40 h-3 rounded wbi-skeleton"></div>
+                </div>
+                <div class="w-14 h-14 rounded-2xl wbi-skeleton shrink-0"></div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-surface-white rounded-2xl border border-border-light p-6 shadow-xs flex items-center justify-between relative overflow-hidden">
+                <div class="space-y-2.5 flex-1 pr-4">
+                    <div class="w-24 h-3.5 rounded wbi-skeleton"></div>
+                    <div class="w-16 h-9 rounded-md wbi-skeleton"></div>
+                    <div class="w-32 h-3 rounded wbi-skeleton"></div>
+                </div>
+                <div class="w-14 h-14 rounded-2xl wbi-skeleton shrink-0"></div>
+            </div>
         </div>
 
-        <!-- Corporate Linear Progress Bar Track -->
-        <div class="w-44 sm:w-52 h-[3.5px] bg-[#E5E7EB] rounded-full overflow-hidden relative mb-3">
-            <div class="wbi-linear-shimmer"></div>
-        </div>
+        <!-- Main Data Table Container Skeleton -->
+        <div class="bg-surface-white rounded-2xl border border-border-light overflow-hidden shadow-xs relative">
+            
+            <!-- Table Toolbar / Search & Filter Skeleton -->
+            <div class="px-6 py-5 border-b border-border-light flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div class="space-y-1.5">
+                    <div class="w-48 h-5 rounded-md wbi-skeleton"></div>
+                    <div class="w-72 h-3.5 rounded wbi-skeleton"></div>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-44 sm:w-56 h-9 rounded-lg wbi-skeleton"></div>
+                    <div class="w-24 h-9 rounded-lg wbi-skeleton"></div>
+                </div>
+            </div>
 
-        <!-- Micro Status Text in JetBrains Mono / Inter -->
-        <div class="flex items-center gap-1.5 text-[11px] font-mono text-[#525c59]/80">
-            <span class="w-1.5 h-1.5 rounded-full bg-[#002a22] animate-ping"></span>
-            <span id="wbi-preloader-text">Memuat sistem...</span>
+            <!-- Table Rows Skeleton -->
+            <div class="divide-y divide-border-light">
+                <!-- Column Headers -->
+                <div class="px-6 py-3.5 bg-surface-container-low flex items-center gap-4">
+                    <div class="w-32 h-3.5 rounded wbi-skeleton"></div>
+                    <div class="w-52 h-3.5 rounded wbi-skeleton hidden sm:block"></div>
+                    <div class="w-28 h-3.5 rounded wbi-skeleton hidden md:block"></div>
+                    <div class="w-24 h-3.5 rounded wbi-skeleton hidden lg:block"></div>
+                    <div class="w-20 h-3.5 rounded wbi-skeleton ml-auto"></div>
+                </div>
+
+                <!-- Row 1 -->
+                <div class="px-6 py-4 flex items-center gap-4">
+                    <div class="w-32 h-6 rounded-md wbi-skeleton"></div>
+                    <div class="flex-1 space-y-1 sm:block hidden">
+                        <div class="w-52 h-4 rounded wbi-skeleton"></div>
+                        <div class="w-32 h-3 rounded wbi-skeleton"></div>
+                    </div>
+                    <div class="w-28 h-4 rounded wbi-skeleton hidden md:block"></div>
+                    <div class="w-20 h-6 rounded-full wbi-skeleton hidden lg:block"></div>
+                    <div class="w-16 h-7 rounded-lg wbi-skeleton ml-auto"></div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="px-6 py-4 flex items-center gap-4">
+                    <div class="w-28 h-6 rounded-md wbi-skeleton"></div>
+                    <div class="flex-1 space-y-1 sm:block hidden">
+                        <div class="w-44 h-4 rounded wbi-skeleton"></div>
+                        <div class="w-28 h-3 rounded wbi-skeleton"></div>
+                    </div>
+                    <div class="w-32 h-4 rounded wbi-skeleton hidden md:block"></div>
+                    <div class="w-20 h-6 rounded-full wbi-skeleton hidden lg:block"></div>
+                    <div class="w-16 h-7 rounded-lg wbi-skeleton ml-auto"></div>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="px-6 py-4 flex items-center gap-4">
+                    <div class="w-36 h-6 rounded-md wbi-skeleton"></div>
+                    <div class="flex-1 space-y-1 sm:block hidden">
+                        <div class="w-60 h-4 rounded wbi-skeleton"></div>
+                        <div class="w-36 h-3 rounded wbi-skeleton"></div>
+                    </div>
+                    <div class="w-24 h-4 rounded wbi-skeleton hidden md:block"></div>
+                    <div class="w-20 h-6 rounded-full wbi-skeleton hidden lg:block"></div>
+                    <div class="w-16 h-7 rounded-lg wbi-skeleton ml-auto"></div>
+                </div>
+
+                <!-- Row 4 -->
+                <div class="px-6 py-4 flex items-center gap-4">
+                    <div class="w-30 h-6 rounded-md wbi-skeleton"></div>
+                    <div class="flex-1 space-y-1 sm:block hidden">
+                        <div class="w-48 h-4 rounded wbi-skeleton"></div>
+                        <div class="w-24 h-3 rounded wbi-skeleton"></div>
+                    </div>
+                    <div class="w-28 h-4 rounded wbi-skeleton hidden md:block"></div>
+                    <div class="w-20 h-6 rounded-full wbi-skeleton hidden lg:block"></div>
+                    <div class="w-16 h-7 rounded-lg wbi-skeleton ml-auto"></div>
+                </div>
+
+                <!-- Row 5 -->
+                <div class="px-6 py-4 flex items-center gap-4">
+                    <div class="w-34 h-6 rounded-md wbi-skeleton"></div>
+                    <div class="flex-1 space-y-1 sm:block hidden">
+                        <div class="w-56 h-4 rounded wbi-skeleton"></div>
+                        <div class="w-32 h-3 rounded wbi-skeleton"></div>
+                    </div>
+                    <div class="w-24 h-4 rounded wbi-skeleton hidden md:block"></div>
+                    <div class="w-20 h-6 rounded-full wbi-skeleton hidden lg:block"></div>
+                    <div class="w-16 h-7 rounded-lg wbi-skeleton ml-auto"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Embedded Preloader Styles -->
+<!-- Embedded Skeleton Shimmer & Button Spinner Styles -->
 <style>
-    /* Breathing animation for logo disc */
-    @keyframes wbiLogoBreath {
-        0%, 100% { transform: scale(1); box-shadow: 0 4px 12px rgba(0, 42, 34, 0.05); }
-        50% { transform: scale(1.03); box-shadow: 0 8px 24px rgba(0, 42, 34, 0.12); }
-    }
-    .wbi-logo-pulse {
-        animation: wbiLogoBreath 2.2s ease-in-out infinite;
+    /* Continuous Lightwave Shimmer Effect for Skeleton Elements */
+    .wbi-skeleton {
+        position: relative;
+        overflow: hidden;
+        background-color: #E2E8F0; /* slate-200 / border-light */
+        border-radius: 0.375rem;
     }
 
-    /* Continuous Linear Progress Shimmer */
-    @keyframes wbiShimmerMove {
-        0% { left: -40%; width: 30%; }
-        50% { left: 30%; width: 50%; }
-        100% { left: 100%; width: 40%; }
-    }
-    .wbi-linear-shimmer {
+    .wbi-skeleton::after {
         position: absolute;
         top: 0;
+        right: 0;
         bottom: 0;
-        background: linear-gradient(90deg, #002a22 0%, #134137 50%, #805600 100%);
-        border-radius: 9999px;
-        animation: wbiShimmerMove 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        left: 0;
+        transform: translateX(-100%);
+        background-image: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.45) 30%,
+            rgba(255, 255, 255, 0.75) 50%,
+            rgba(255, 255, 255, 0.45) 70%,
+            rgba(255, 255, 255, 0) 100%
+        );
+        animation: wbiSkeletonShimmer 1.6s infinite ease-in-out;
+        content: '';
     }
 
-    /* Hidden State with Smooth Fade & Slight Scale */
-    .wbi-preloader-hidden {
-        opacity: 0 !important;
-        visibility: hidden !important;
-        transform: scale(0.985) !important;
-        pointer-events: none !important;
+    @keyframes wbiSkeletonShimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
     }
 
-    /* Spinner for Submit Buttons */
+    /* Inline Spinner for Submit Buttons */
     .wbi-btn-spinner {
         display: inline-block;
-        width: 1rem;
-        height: 1rem;
-        border: 2px solid rgba(255, 255, 255, 0.3);
+        width: 0.875rem;
+        height: 0.875rem;
+        border: 2px solid rgba(255, 255, 255, 0.35);
         border-radius: 50%;
         border-top-color: #ffffff;
         animation: wbiSpin 0.6s linear infinite;
+        vertical-align: -0.125em;
     }
     @keyframes wbiSpin {
         to { transform: rotate(360deg); }
     }
 </style>
 
-<!-- Preloader & Page Navigation Script -->
+<!-- Skeleton Controller Script -->
 <script>
     (function () {
-        const preloader = document.getElementById('wbi-preloader');
         const topBar = document.getElementById('wbi-topbar-loader');
+        const skeletonLoader = document.getElementById('wbi-skeleton-loader');
+        const skeletonText = document.getElementById('wbi-skeleton-text');
 
-        // 1. Hide Initial Preloader Smoothly
-        function dismissInitialPreloader() {
-            if (!preloader || preloader.classList.contains('wbi-preloader-hidden')) return;
-            
-            // Add fade class
-            preloader.classList.add('wbi-preloader-hidden');
-            
-            // Cleanup from DOM after transition
-            setTimeout(function () {
-                if (preloader.parentNode) {
-                    preloader.style.display = 'none';
-                }
-            }, 400);
-        }
-
-        // Trigger on load
-        if (document.readyState === 'complete') {
-            setTimeout(dismissInitialPreloader, 100);
-        } else {
-            window.addEventListener('load', function () {
-                setTimeout(dismissInitialPreloader, 150);
-            });
-        }
-
-        // Safety timeout fallback (max 1.5s so user is never blocked)
-        setTimeout(dismissInitialPreloader, 1500);
-
-        // 2. Global Topbar Loading Controller
         let progressInterval = null;
-        
+        let skeletonTimeout = null;
+        let navDebounceTimeout = null;
+
+        // 1. Top Slim Progress Bar Controller
         window.showPageLoader = function () {
             if (!topBar) return;
             clearInterval(progressInterval);
             topBar.style.opacity = '1';
-            topBar.style.width = '15%';
+            topBar.style.width = '25%';
 
-            let currentWidth = 15;
+            let currentWidth = 25;
             progressInterval = setInterval(function () {
                 if (currentWidth < 85) {
-                    currentWidth += Math.random() * 12;
+                    currentWidth += Math.random() * 10;
                     topBar.style.width = currentWidth + '%';
                 }
             }, 200);
@@ -157,10 +251,67 @@
                 setTimeout(function () {
                     topBar.style.width = '0%';
                 }, 250);
+            }, 150);
+        };
+
+        // 2. Main Skeleton Screen Controller
+        window.showSkeletonLoader = function (message) {
+            if (!skeletonLoader) return;
+
+            // Adjust positioning if no sidebar (e.g. login/guest layout)
+            if (!document.getElementById('sidebar')) {
+                skeletonLoader.classList.remove('lg:left-[260px]', 'top-16');
+                skeletonLoader.classList.add('left-0', 'top-0');
+            } else {
+                skeletonLoader.classList.add('lg:left-[260px]', 'top-16');
+                skeletonLoader.classList.remove('left-0', 'top-0');
+            }
+
+            if (skeletonText && message) {
+                skeletonText.textContent = message;
+            }
+
+            clearTimeout(skeletonTimeout);
+            window.showPageLoader();
+
+            skeletonLoader.classList.remove('hidden');
+            skeletonLoader.setAttribute('aria-hidden', 'false');
+
+            requestAnimationFrame(function () {
+                skeletonLoader.classList.remove('opacity-0', 'pointer-events-none');
+                skeletonLoader.classList.add('opacity-100', 'pointer-events-auto');
+            });
+
+            // Failsafe auto-dismiss after 20s if request hangs
+            skeletonTimeout = setTimeout(function () {
+                window.hideSkeletonLoader();
+            }, 20000);
+        };
+
+        window.hideSkeletonLoader = function () {
+            if (!skeletonLoader) return;
+            clearTimeout(skeletonTimeout);
+            clearTimeout(navDebounceTimeout);
+
+            window.hidePageLoader();
+
+            skeletonLoader.classList.remove('opacity-100', 'pointer-events-auto');
+            skeletonLoader.classList.add('opacity-0', 'pointer-events-none');
+
+            setTimeout(function () {
+                skeletonLoader.classList.add('hidden');
+                skeletonLoader.setAttribute('aria-hidden', 'true');
+                if (skeletonText) {
+                    skeletonText.textContent = 'Memuat data...';
+                }
             }, 200);
         };
 
-        // 3. Auto Trigger Top Bar Preload on Navigation Links
+        // Aliases for backwards compatibility
+        window.showHeavyLoader = window.showSkeletonLoader;
+        window.hideHeavyLoader = window.hideSkeletonLoader;
+
+        // 3. Navigation Links Handler (Smooth debounce so instantaneous clicks don't flicker)
         document.addEventListener('click', function (e) {
             const link = e.target.closest('a');
             if (!link) return;
@@ -180,36 +331,85 @@
                 !e.ctrlKey && 
                 !e.metaKey && 
                 !e.shiftKey) {
-                window.showPageLoader();
+                
+                // Debounce by 120ms: if page unloads quickly, no flicker. If taking a moment, show skeleton!
+                clearTimeout(navDebounceTimeout);
+                navDebounceTimeout = setTimeout(function () {
+                    const navMsg = link.getAttribute('data-loading-text') || 'Memuat halaman...';
+                    window.showSkeletonLoader(navMsg);
+                }, 120);
             }
         });
 
-        // 4. Auto Trigger Loader & Disable Button on Form Submits
+        // 4. Form Submit Handler: Only for state-changing methods (POST, PUT, PATCH, DELETE)
         document.addEventListener('submit', function (e) {
             const form = e.target;
+            if (!form || !(form instanceof HTMLFormElement)) return;
+
+            // Skip GET forms (search, filter, pagination, query params)
+            const method = (form.getAttribute('method') || 'GET').toUpperCase();
+            if (method === 'GET') return;
+
+            // Honor explicit opt-out
             if (form.hasAttribute('data-no-loader')) return;
 
-            window.showPageLoader();
+            // Check if HTML5 validation is supported and passes
+            if (typeof form.checkValidity === 'function' && !form.checkValidity()) {
+                return;
+            }
 
+            // Submit button loading state & double-click prevention
             const submitBtn = form.querySelector('button[type="submit"]:not([data-no-loading])');
             if (submitBtn && !submitBtn.disabled) {
-                // Store original content
                 if (!submitBtn.dataset.originalHtml) {
                     submitBtn.dataset.originalHtml = submitBtn.innerHTML;
                 }
-                
-                // Show inline spinner
                 submitBtn.disabled = true;
                 submitBtn.style.opacity = '0.85';
                 submitBtn.style.cursor = 'wait';
-                submitBtn.innerHTML = '<span class="wbi-btn-spinner inline-block mr-2"></span> Memproses...';
+                const btnText = submitBtn.getAttribute('data-loading-text') || 'Memproses...';
+                submitBtn.innerHTML = '<span class="wbi-btn-spinner inline-block mr-2"></span> ' + btnText;
             }
+
+            // Show skeleton loading with custom or contextual message
+            const heavyMsg = form.getAttribute('data-loading-text') || 'Sedang memproses data ke sistem...';
+            window.showSkeletonLoader(heavyMsg);
         });
 
-        // Hide loader when navigating back via bfcache
-        window.addEventListener('pageshow', function (event) {
-            window.hidePageLoader();
-            dismissInitialPreloader();
+        // 5. Click Handler for Explicitly Skeleton/Heavy Elements
+        document.addEventListener('click', function (e) {
+            const heavyEl = e.target.closest('[data-skeleton], [data-heavy]');
+            if (!heavyEl) return;
+
+            // Let form submit event listener handle form submit buttons
+            if (heavyEl.matches('button[type="submit"]') && heavyEl.closest('form')) return;
+
+            const msg = heavyEl.getAttribute('data-loading-text') || 'Sedang memproses...';
+            window.showSkeletonLoader(msg);
+        });
+
+        // 6. Restore State on Back-Forward Navigation (bfcache)
+        function restoreAllStates() {
+            clearTimeout(navDebounceTimeout);
+            window.hideSkeletonLoader();
+
+            // Restore any disabled submit buttons
+            document.querySelectorAll('button[data-original-html]').forEach(function (btn) {
+                btn.disabled = false;
+                btn.innerHTML = btn.dataset.originalHtml;
+                delete btn.dataset.originalHtml;
+                btn.style.opacity = '';
+                btn.style.cursor = '';
+            });
+        }
+
+        window.addEventListener('pageshow', restoreAllStates);
+
+        // 7. Escape key safety dismiss
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && skeletonLoader && !skeletonLoader.classList.contains('hidden')) {
+                restoreAllStates();
+            }
         });
     })();
 </script>

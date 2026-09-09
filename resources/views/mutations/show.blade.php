@@ -280,7 +280,7 @@
                         </button>
 
                         <div id="reject-box" class="hidden p-3 rounded-md bg-white border border-rose-200 space-y-2 mt-1">
-                            <form id="reject-form" method="POST" action="{{ route('mutations.reject', $mutation) }}" class="space-y-2">
+                            <form id="reject-form" method="POST" action="{{ route('mutations.reject', $mutation) }}" class="space-y-2" data-heavy data-loading-text="Menolak pengajuan mutasi...">
                                 @csrf
                                 <label for="rejection_reason" class="block text-[11px] font-semibold text-rose-900">Alasan Penolakan:</label>
                                 <textarea name="rejection_reason" id="rejection_reason" rows="2" required
@@ -406,10 +406,16 @@ function confirmExecuteMutation() {
             focusCancel: true,
         }).then((result) => {
             if (result.isConfirmed) {
+                if (typeof window.showHeavyLoader === 'function') {
+                    window.showHeavyLoader('Memindahkan aset & mengarsipkan formulir...');
+                }
                 document.getElementById('execute-form').submit();
             }
         });
     } else {
+        if (typeof window.showHeavyLoader === 'function') {
+            window.showHeavyLoader('Memindahkan aset & mengarsipkan formulir...');
+        }
         document.getElementById('execute-form').submit();
     }
 }
@@ -436,10 +442,16 @@ function confirmReceiverApproval() {
             reverseButtons: true,
         }).then((result) => {
             if (result.isConfirmed) {
+                if (typeof window.showHeavyLoader === 'function') {
+                    window.showHeavyLoader('Menyimpan persetujuan penerima...');
+                }
                 document.getElementById('approve-receiver-form').submit();
             }
         });
     } else {
+        if (typeof window.showHeavyLoader === 'function') {
+            window.showHeavyLoader('Menyimpan persetujuan penerima...');
+        }
         document.getElementById('approve-receiver-form').submit();
     }
 }

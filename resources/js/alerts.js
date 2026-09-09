@@ -167,6 +167,11 @@ document.addEventListener('DOMContentLoaded', () => {
             isDanger: isDelete,
         }).then((confirmed) => {
             if (confirmed) {
+                if (typeof window.showSkeletonLoader === 'function') {
+                    window.showSkeletonLoader(isDelete ? 'Menghapus data dari sistem...' : 'Sedang memproses tindakan...');
+                } else if (typeof window.showHeavyLoader === 'function') {
+                    window.showHeavyLoader(isDelete ? 'Menghapus data dari sistem...' : 'Sedang memproses tindakan...');
+                }
                 if (target.tagName === 'FORM') {
                     target.submit();
                 } else if (target.form) {
